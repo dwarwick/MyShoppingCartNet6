@@ -352,6 +352,15 @@ namespace MyShoppingCart.Controllers
             return View("EditCategories", editCategoriesVM);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddRootCategory()
+        {
+            string category = Request.Form["ProductCategoryLookup.CategoryName"];
+            EditCategoriesVM editCategoriesVM = await _productService.AddNewCategoryLookupAsync(0,category);
+
+            return RedirectToAction("EditCategories");
+        }
+
         [HttpGet]
         public async Task<IActionResult> WriteReview(int productId)
         {

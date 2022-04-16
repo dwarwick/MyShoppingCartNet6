@@ -13,6 +13,8 @@ namespace MyShoppingCart.Models
         public int Id { get; set; }
 
         public int ParentCategoryId { get; set; }
+
+        [Display(Name = "New Category Name")]
         public string CategoryName { get; set; }
         public IList<ProductCategory> productCategory { get; set; }
     }
