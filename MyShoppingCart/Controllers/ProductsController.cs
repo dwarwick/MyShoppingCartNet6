@@ -347,16 +347,23 @@ namespace MyShoppingCart.Controllers
       
         public async Task<IActionResult> EditCategoriesPost(int Id, string category)
         {
-            EditCategoriesVM editCategoriesVM = await _productService.AddNewCategoryLookupAsync(Id, category);
+            EditCategoriesVM editCategoriesVM = new EditCategoriesVM();
             
+            if(category != null && Id > 0 && !string.IsNullOrWhiteSpace(category.Trim()))
+                editCategoriesVM = await _productService.AddNewCategoryLookupAsync(Id, category);
+            else
+                return RedirectToAction("EditCategories");
+
             return View("EditCategories", editCategoriesVM);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddRootCategory()
         {
+            EditCategoriesVM editCategoriesVM = new EditCategoriesVM();
             string category = Request.Form["ProductCategoryLookup.CategoryName"];
-            EditCategoriesVM editCategoriesVM = await _productService.AddNewCategoryLookupAsync(0,category);
+            if(!string.IsNullOrWhiteSpace(category.Trim()))
+                editCategoriesVM = await _productService.AddNewCategoryLookupAsync(0,category);
 
             return RedirectToAction("EditCategories");
         }
