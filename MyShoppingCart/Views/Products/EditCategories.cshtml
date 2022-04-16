@@ -1,0 +1,148 @@
+﻿@using MyShoppingCart.Data.ViewModels
+@model EditCategoriesVM
+@*@using MyShoppingCart.Data;*@
+
+
+@{
+	ViewData["Title"] = "Product Categories";
+	ProductCategoryLookup newCategory = new ProductCategoryLookup();
+}
+@*<link rel="stylesheet" href="~/css/EditCategories/demo.css" />*@
+@*<link rel="stylesheet" href="~/css/EditCategories/style.css" />*@
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p>
+				<h4>Edit Product @Model.lstProductCategoryLookup.Count Categories</h4>
+			</p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-8">
+			<div class="row justify-content-start">
+				<div class="col">
+					<form asp-action="EditCategoriesPost">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+						<div class="form-group">
+							<label asp-for="ProductCategoryLookup.CategoryName" class="control-label"></label>
+							<input asp-for="ProductCategoryLookup.CategoryName" class="form-control" id="catName" />
+							<span asp-validation-for="ProductCategoryLookup.CategoryName" class="text-danger"></span>
+						</div>
+						<div class="form-group my-1">
+							<input type="submit" value="Update" class="btn btn-outline-success float-right" />
+
+						</div>
+					</form>
+
+					@{
+						int iParentCategory = 0;
+
+						List<ProductCategoryLookup> LevelCategories = Model.lstProductCategoryLookup.Where(x => x.ParentCategoryId == iParentCategory).OrderBy(x => x.CategoryName).ToList();
+
+						foreach (ProductCategoryLookup productCategory in LevelCategories)
+						{
+							<ul style="list-style: none; margin: 0px">
+								@{
+									if (DoesSubCategoryExist(productCategory))
+										SubCategoryYes(productCategory);
+									else
+										SubCategoryNo(productCategory);
+								}
+							</ul>
+						}
+
+						string RenderSubcategory(ProductCategoryLookup subCategory)
+						{
+							string ret = "";
+							List<ProductCategoryLookup> SubCategories = Model.lstProductCategoryLookup.Where(x => x.ParentCategoryId == subCategory.Id).OrderBy(x => x.CategoryName).ToList();
+
+							foreach (ProductCategoryLookup item in SubCategories)
+							{
+
+								if (DoesSubCategoryExist(item))
+									SubCategoryYes(item);
+								else
+									SubCategoryNo(item);
+							}
+
+							return ret;
+						}
+
+						bool DoesSubCategoryExist(ProductCategoryLookup parentCategory)
+						{
+							return Model.lstProductCategoryLookup.Where(x => x.ParentCategoryId == parentCategory.Id).Count() > 0;
+						}
+
+						void SubCategoryYes(ProductCategoryLookup category)
+						{
+
+							<li class='sub-menu' style="background-color:grey;margin:0px" data-sub-id="@category.Id" ondblclick="AddSubCategory(this);">
+
+								<a style="color:aliceblue" ><div class='fa fa-caret-right right'></div>@category.CategoryName</a>
+								<ul style="list-style: none; margin: 0px">
+									@RenderSubcategory(category)
+								</ul>
+							</li>
+						}
+
+						void SubCategoryNo(ProductCategoryLookup category)
+						{
+							<li style="background-color: dimgray; margin: 0px" data-sub-id="@category.Id" ondblclick="AddSubCategory(this);"><a style="color:aliceblue">@category.CategoryName</a></li>
+						}
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts
+{
+<script type="text/javascript">
+
+
+	function AddSubCategory(elem) {
+		event.stopPropagation();
+		var person = document.getElementById("catName").value;
+		var Id= $(elem).data('sub-id');
+
+		console.log(`person: ${person}, Id: ${Id}`)
+
+		var request;
+		if (window.XMLHttpRequest) {
+			//New browsers.
+			request = new XMLHttpRequest();
+		}
+
+
+		if (request != null) {
+			var url = `/Products/EditCategoriesPost?Id=${Id}&category=${person}`;
+			request.open("POST", url, false);
+			//request.setRequestHeader("Content-Type", "text/plain");
+
+			request.onreadystatechange = function () {
+				if (request.readyState == 4 && request.status == 200) {
+					//console.log(request.responseText);
+
+					//var response = JSON.parse(request.responseText);
+					//alert("Hello: " + response.Name + ".\nCurrent Date and Time: " + response.DateTime);
+					window.location.reload();
+				}
+			};
+			request.send();
+		}
+		
+	}
+
+	
+
+		$('.sub-menu ul').hide();
+		$(".sub-menu a").click(function () {
+			$(this).parent(".sub-menu").children("ul").slideToggle("100");
+			$(this).find(".right").toggleClass("fa-caret-down fa-caret-right");
+		});
+</script>
+}

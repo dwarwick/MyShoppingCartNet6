@@ -1,0 +1,79 @@
+﻿@model NewProductVM
+@using MyShoppingCart.Data;
+
+
+
+@{
+    ViewData["Title"] = "Create a new product";
+}
+
+<div class="row">
+    <div class="col-md-10 offset-1">
+        <p>
+            <h4>Create New Product</h4>
+        </p>
+
+        <div class="row">
+            <div>
+                <form asp-action="Create" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Price" class="control-label"></label>
+                                <input asp-for="Price" type="text" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+
+                            
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label"></label>
+                                <textarea asp-for="Description" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-outline-success float-right" />
+                        <a class="btn btn-outline-secondary" asp-action="Index">Show all</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @*<script>
+            $("#ImageURL").on("change", function () {
+                var output = document.getElementById("ImageUrlPreview");
+                output.src = $(this).val();
+            })
+        </script>*@
+
+    <script>
+        $(document).ready(function () {
+            // Initialization
+            new AutoNumeric('#Price', {
+                currencySymbol: '$',
+                alwaysAllowDecimalCharacter: true,
+                decimalCharacterAlternative: ".",
+                outputFormat: "number",
+                unformatOnSubmit: true
+            });
+        })
+    </script>
+}
+

@@ -1,0 +1,205 @@
+﻿@using MyShoppingCart.Data.ViewModels;
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration;
+
+@model EditProfileVM;
+
+@{
+    ViewData["Title"] = "Edit Your Seller Account";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <h4>Edit Your Seller Account</h4>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Sorry!</b> - @TempData["Error"] </span>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form asp-action="SellerAccount">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                    @if (User.IsInRole("Seller"))
+                    {
+                        <div class="form-group">
+                            <label asp-for="Subdomain" class="control-label"></label>
+                            <input asp-for="Subdomain" class="form-control" value="@Model.Subdomain" />
+                            <span asp-validation-for="Subdomain" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CustomDomain" class="control-label"></label>
+                            <input asp-for="CustomDomain" class="form-control" value="@Model.CustomDomain" />
+                            <span asp-validation-for="CustomDomain" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="pt-0">Custom Domain bound to website?</label>
+
+                                @if (Model.DomainBound)
+                                {
+                                    <span>Yes</span>
+                                }
+                                else
+                                {
+                                    <span>No</span>
+                                }
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="pt-0">Certificate Created?</label>
+
+                                @if (Model.CertificateExists)
+                                {
+                                    <span>Yes</span>
+                                }
+                                else
+                                {
+                                    <span>No</span>
+                                }
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="pt-0">Certificate bound to domain?</label>
+
+                                @if (Model.CertificateBound)
+                                {
+                                    <span>Yes</span>
+                                }
+                                else
+                                {
+                                    <span>No</span>
+                                }
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal fade" id="onload" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <!-- Add this line to your code -->
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Seller Account Subdomain Required</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Specify a subdomain for your personal seller site. For example, <i>https://mysubdomain.myshoppingcart.biz</i>.
+
+                                        <br /> mysubdomain is the subdomain. After you pick a subdomain, your buyers will navigate to <br />
+
+                                        <i>https://mysubdomain.myshoppingcart.biz</i> to see only your items.
+
+                                        <br />Anyone who navigates to <i>https://myshoppingcart.biz</i> will see your items, as well as everyone elses items.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- And the relavant closing div tag -->
+                    }
+
+                    <p>Note: If you toggle from regular user to seller, or from seller to regular user, you will be logged out and you will have to log in again.</p>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" asp-for="SellerAccount" onclick="SellerAccountChange()" />
+
+                        <label class="form-check-label" asp-for="SellerAccount" id="SellerLabel">Seller</label>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <input class="btn btn-outline-success float-right" type="submit" value="Submit" />
+                        <a class="btn btn-outline-secondary" asp-controller="Products" asp-action="Index">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <p>
+        Note: If you own a domain that you want to point to this website, you must verify ownership of the domain and point your domain to this website. 
+        Enter the following entries into the domain records:
+        </p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">A</th>
+                    <td>@@</td>
+                    <td>40.112.243.56</td>
+                </tr>
+                <tr>
+                    <th scope="row">TXT</th>
+                    <td>ausid</td>
+                    <td>6CEE409C1E04364EDAA21B6EA61A968ACD675B369A5540D019FB19B3A8141251</td>
+
+                </tr>
+                <tr>
+                    <th scope="row">CNAME</th>
+                    <td>www</td>
+                    <td>myshoppingcart20211028195113.azurewebsites.net</td>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="DNSModal"  onclick="ShowDNSModal()" style="align-content:center">
+            <h3 style="text-align:center">Click Screenshot Below</h3>
+            <img src="@(Configuration.GetValue<string>("StorageContainerURL"))/site-files/DNS Entries.png"
+                 class="img-fluid box-shadow border border-dark" style="width:auto" alt="Alternate Text" />
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Enter the following DNS Entries where you manage your domain</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="@(Configuration.GetValue<string>("StorageContainerURL"))/site-files/DNS Entries.png"
+                     class="img-fluid"  alt="Alternate Text" />
+            </div>            
+        </div>
+    </div>
+</div>
+
+@if (Model.Subdomain == null)
+{
+    <script type="text/javascript">
+        window.onload = () => {
+            $('#onload').modal('show');
+
+        }
+    </script>
+}<!--Modal JS Script -->

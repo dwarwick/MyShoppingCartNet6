@@ -1,0 +1,21 @@
+﻿@inject MyShoppingCart.Data.Cart.ShoppingCart _shoppingCart;
+
+@model int;
+
+@{
+    string cartID = Context.Request.Cookies["CartID"];
+    if (cartID != null)
+    {
+        var cart = _shoppingCart.GetShoppingCartItems();
+
+        if (cart.Count > 0)
+        {
+            <li class="list-inline-item">
+                <a class="nav-link text-dark" asp-controller="Orders" asp-action="ShoppingCart">
+                    <i class="bi bi-cart4"></i> @Model
+                </a>
+            </li>
+        }
+
+    }
+}

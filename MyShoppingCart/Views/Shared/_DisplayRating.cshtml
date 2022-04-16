@@ -1,0 +1,105 @@
+﻿@model double
+
+@switch (Model)
+{
+    case 0.0:
+        <div>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+
+        break;
+    case <= 0.75:
+        <div>
+            <i class="bi bi-star-half" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+        break;
+    case <= 1.25:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+        break;
+    case <= 1.75:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-half" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+        break;
+    case <= 2.25:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+        break;
+    case <= 2.75:
+        <div>
+            <i class="bi bi-star-fill" style="color: gold"></i>
+            <i class="bi bi-star-fill" style="color: gold"></i>
+            <i class="bi bi-star-half" style="color: gold"></i>
+            <i class="bi bi-star-fill" style="color: darkgrey"></i>
+            <i class="bi bi-star-fill" style="color: darkgrey"></i>
+        </div>
+        break;
+    case <= 3.25:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+        break;
+    case <= 3.75:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-half" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+        break;
+    case <= 4.25:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:darkgrey"></i>
+        </div>
+        break;
+    case <= 4.75:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-half" style="color:gold"></i>
+        </div>
+        break;
+    default:
+        <div>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+            <i class="bi bi-star-fill" style="color:gold"></i>
+        </div>
+        break;
+}

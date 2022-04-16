@@ -1,0 +1,20 @@
+﻿
+@{
+    @if (ViewBag.FullName != null)
+        ViewData["Title"] = "Account Veried";
+    else
+        ViewData["Title"] = "Email Not Veried";
+
+}
+
+@if (ViewBag.FullName != null)
+{
+    <h1>Account Verified!</h1>
+
+    <p>@ViewBag.FullName, thank you for verifying your email account! Please log in with your email and password!</p> }
+else
+{
+    <h1>Account Verification Error!</h1>
+}
+
+

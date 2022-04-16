@@ -1,0 +1,83 @@
+﻿@model Product
+@*@using MyShoppingCart.Data;*@
+
+@{
+    ViewData["Title"] = "Update Product";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <p>
+            <h4>Update Product</h4>
+        </p>
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" type="text" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="Enabled">
+                <label class="form-check-label" asp-for="Enabled">
+
+                </label>
+            </div>
+
+            <div class="form-group mt-1">
+                <input type="submit" value="Update" class="btn btn-outline-success float-right" />
+                <a class="btn btn-outline-secondary" asp-action="Index">Show all</a>
+                <a class="btn btn-outline-secondary" asp-action="UploadFile" asp-route-productId="@Model.Id">Upload Images</a>
+                <a class="btn btn-outline-secondary" asp-action="EditImageDescriptions" asp-route-productId="@Model.Id">Edit Images</a>
+                <a class="btn btn-outline-secondary" asp-action="EditCategories" asp-route-productId="@Model.Id">Edit Categories</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            // Initialization
+            new AutoNumeric('#Price', {
+                currencySymbol: '$',
+                alwaysAllowDecimalCharacter: true,
+                decimalCharacterAlternative: ".",
+                outputFormat: "number",
+                unformatOnSubmit: true
+            });
+        })
+    </script>
+}
+
+
+

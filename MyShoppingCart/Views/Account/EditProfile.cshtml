@@ -1,0 +1,69 @@
+﻿@using MyShoppingCart.Data.ViewModels;
+
+@model EditProfileVM;
+
+@{
+    ViewData["Title"] = "Edit Your Profile";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <p>
+            <h4>Edit Your Profile</h4>
+        </p>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Sorry!</b> - @TempData["Error"] </span>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form asp-action="EditProfile">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="FullName" class="control-label"></label>
+                        <input asp-for="FullName" class="form-control" readonly="readonly" value="@Model.FullName" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label asp-for="EmailAddress" class="control-label"></label>
+                                <input asp-for="EmailAddress" class="form-control" readonly="readonly" />
+                                <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-2 d-flex align-items-center">
+                            <span><a asp-action="ChangeEmail"><i class="bi bi-pencil-square"></i></a></span>
+                        </div>
+                    </div>
+
+
+                    <b>Note: If you toggle from regular user to seller, or from seller to regular user, you will be logged out and you will have to log in again.</b>
+
+                    @*<div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="SellerAccount">
+                        <label class="form-check-label" asp-for="SellerAccount"></label>
+                    </div>*@
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" asp-for="SellerAccount" onclick="SellerAccountChange()" />
+
+                        <label class="form-check-label" asp-for="SellerAccount" id="SellerLabel">Seller</label>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <input class="btn btn-outline-success float-right" type="submit" value="Submit" />
+                        <a class="btn btn-outline-secondary" asp-controller="Products" asp-action="Index">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

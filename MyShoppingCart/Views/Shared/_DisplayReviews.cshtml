@@ -1,0 +1,26 @@
+﻿@model List<ProductRating>
+<div class="row">
+
+
+    @foreach (ProductRating rating in @Model)
+            {
+    <div class="col-6 my-2">
+
+        
+        <div class="col" >
+            @{
+                double dRating = (double)rating.Rating;
+                @await Html.PartialAsync("_DisplayRating", dRating)
+            @string.Format("{0}      {1}", @rating.Date.ToShortDateString(), @rating.applicationUser.FullName.Split(' ')[0]);
+            }
+
+        </div>            
+
+        <div class="border border-dark rounded p-2">
+            <p>@rating.ReviewText</p>
+        </div>
+    </div>
+            }
+
+
+</div>

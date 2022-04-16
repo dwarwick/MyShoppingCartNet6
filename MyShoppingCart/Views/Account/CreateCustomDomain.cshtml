@@ -1,0 +1,75 @@
+﻿@using MyShoppingCart.Data.ViewModels;
+
+@model EditProfileVM;
+
+@{
+    ViewData["Title"] = "Create Custom Domain";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-3">
+            <h4>You are registering your domain, @Model.CustomDomain, with this site.</h4>
+            <p>Anyone who navigates to <span>https://</span>@Model.CustomDomain will only see your products that are listed on this site.</p>
+            <p>
+                When you click the <span style="font-weight: bold">Register My Domain</span> button below, this site, <span style="font-weight: bold">myshoppingcart.biz</span>
+                will become associated with your domain. Anyone who navigates to your domain will actually be visiting<span style="font-weight: bold"> myshoppingcart.biz</span>,
+                but the visitor will not know that. They will see your domain name in the browser. They will only see and be able to buy your products.
+            </p>
+            <p>We will also associate an <span style="font-weight: bold">SSL Certificate with your domain at no cost to you!</span></p>
+            <p>The process of Associating your domain with this site, creating a certificate, and associating the certificate with your domain will take at least 5 minutes, but could take up to 10 minutes starting when you click the button below.</p>
+
+            <p>This will be a 3 part process:</p>
+
+            <ul>
+                <li>First, your domain will be associated with this website. This will take a few seconds.</li>
+                <li>Second, the certificate will be created. This will take anywhere from 5 to 10 minutes. Navigate to <a asp-controller="Account" asp-action="SellerAccount">Seller Profile</a> to check the status of this task</li>
+                <li>Third, the certificate will be associated with your domain. This will take a few seconds. Navigate to <a asp-controller="Account" asp-action="SellerAccount">Seller Profile</a> to check the status of this task</li>
+            </ul>
+
+            <p>Click the button below to begin this process.</p>
+
+            @*<a class="btn btn-outline-secondary" asp-controller="Account" asp-action="RegisterCustomDomain" asp-route-Domain="@Model.CustomDomain">Register My Domain</a>*@
+            <a class="btn btn-primary" onclick="HandleClick()" id="RegisterButton" asp-controller="Account" asp-action="RegisterCustomDomain" asp-route-Domain="@Model.CustomDomain">Register My Domain</a>
+
+            @*<div id="ten-countdown"></div>*@
+        </div>
+    </div>
+
+</div>
+
+@*<script type="text/javascript">
+    HandleClick = () => {
+
+        element = document.getElementById("RegisterButton").style.visibility = "hidden";;
+        
+        countdown("ten-countdown", 10, 0);
+    }
+
+    function countdown(elementName, minutes, seconds) {
+        var element, endTime, hours, mins, msLeft, time;
+
+        function twoDigits(n) {
+            return (n <= 9 ? "0" + n : n);
+        }
+
+        function updateTimer() {
+            msLeft = endTime - (+new Date);
+            if (msLeft < 1000) {
+                element.innerHTML = "Time is up!";
+            } else {
+                time = new Date(msLeft);
+                hours = time.getUTCHours();
+                mins = time.getUTCMinutes();
+                element.innerHTML = (hours ? hours + ':' + twoDigits(mins) : mins) + ':' + twoDigits(time.getUTCSeconds());
+                setTimeout(updateTimer, time.getUTCMilliseconds() + 500);
+            }
+        }
+
+        element = document.getElementById(elementName);
+        endTime = (+new Date) + 1000 * (60 * minutes + seconds) + 500;
+        updateTimer();
+    }
+
+    
+</script>*@

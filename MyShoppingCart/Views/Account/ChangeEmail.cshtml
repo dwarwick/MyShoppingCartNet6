@@ -1,0 +1,51 @@
+﻿@using MyShoppingCart.Data.ViewModels;
+
+@model ChangeEmailVM;
+
+
+@{
+    ViewData["Title"] = "Change Your Email Address";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <p>
+            <h4>Change Your Email Address</h4>
+        </p>
+
+        <div class="row">
+            <div class="col bg-primary">
+                <h5>If you change your email address, you will have to verify your new email address.</h5>
+            </div>
+
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Sorry!</b> - @TempData["Error"] </span>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form asp-action="ChangeEmail">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="newEmail" class="control-label"></label>
+                        <input asp-for="newEmail" class="form-control" value="@Model.applicationUser.Email" />
+                        <span asp-validation-for="newEmail" class="text-danger"></span>
+                    </div>
+
+                    
+
+                    <div class="form-group mt-3">
+                        <input class="btn btn-outline-success float-right" type="submit" value="Submit" />
+                        <a class="btn btn-outline-secondary" asp-controller="Products" asp-action="Index">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

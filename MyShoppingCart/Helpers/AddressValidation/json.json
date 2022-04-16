@@ -1,0 +1,27 @@
+{
+  "Records": [
+    {
+      "AddressExtras": " ",
+      "AddressKey": "89103437372",
+      "AddressLine1": "6772 Dominion Ct",
+      "AddressLine2": " ",
+      "City": "Las Vegas",
+      "CompanyName": " ",
+      "EmailAddress": " ",
+      "MelissaAddressKey": "3707499810",
+      "MelissaAddressKeyBase": " ",
+      "NameFull": " ",
+      "PhoneNumber": " ",
+      "PostalCode": "89103-4373",
+      "RecordExtras": " ",
+      "RecordID": " ",
+      "Reserved": " ",
+      "Results": "AS01",
+      "State": "NV"
+    }
+  ],
+  "TotalRecords": "1",
+  "TransmissionReference": "Test",
+  "TransmissionResults": " ",
+  "Version": "5.4.5"
+}

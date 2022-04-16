@@ -1,0 +1,40 @@
+﻿@using MyShoppingCart.Data.ViewModels;
+
+
+@{
+    ViewData["Title"] = "Custom Domain Status";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-3">
+
+            @if (ViewBag.Success)
+            {
+                <h4>Congratulations! @ViewBag.Domain has been configured and associated with myshoppingcart.biz!</h4>
+                <p>Anyone who navigates to <span style="font-weight:bold">https://</span> <span style="font-weight:bold">@ViewBag.Domain</span> will only see your products that are listed on this site.</p>
+                <p>
+                    Anyone who navigates to your domain will actually be visiting<span style="font-weight: bold"> myshoppingcart.biz</span>,
+                    but the visitor will not know that. They will see your domain name in the browser. They will only see and be able to buy your products.
+                </p>
+                <p>We are creating an <span style="font-weight: bold">SSL Certificate with your domain at no cost to you!</span></p>
+                <p>
+                    If you experience any issues with using your domain to navigate to this site, please contact your domain provider, or
+                    you may also contact us at <span style="font-weight:bold">customerservice@myshoppingcart.biz</span>.
+                </p>
+
+                <p>Now, the certificate is being created. This will take anywhere from 5 to 10 minutes. Navigate to <a asp-controller="Account" asp-action="SellerAccount">Seller Profile</a> to check the status of this task</p>
+            }
+            else
+            {
+                <h4>There was an issue when we tried to configure @ViewBag.Domain with myshoppingcart.biz!</h4>
+
+                <p>
+                    If you experience any issues with using your domain to navigate to this site, please contact your domain provider, or
+                    you may also contact us at <span style="font-weight:bold">customerservice@myshoppingcart.biz</span>.
+                </p>
+            }
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+﻿
+@*@using MyShoppingCart.Data;*@
+
+@{
+    ViewData["Title"] = "Image Descriptions";
+
+    List<ProductImage> productImages = ViewBag.productImages;
+    int productId = ViewBag.productId;
+}
+
+<div class="row">
+    <div class="col">
+        <p>
+            <h4>Edit Image Descriptions</h4>
+        </p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12" >
+            <form asp-action="EditImageDescriptions">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                <div class="d-flex flex-row flex-nowrap overflow-auto">
+                    
+
+                        @for (int i = 0; i < productImages.Count(); i++)
+                        {
+                    <div class="card-group bg-light">
+                        <div class="card card-img mx-2" style="width:400px">
+                            <img src="@productImages[i].ImageURL" alt="Product Image" style="max-width:400px; margin-top:5px" class="d-block d-sm-none rounded-3 m-2" />
+                            <img src="@productImages[i].ImageURL" alt="@productImages[i].ImageDescription" style="max-width:400px" class="d-none d-sm-block rounded-3 m-2" />
+
+                            <div class="form-group m-2">
+                                <label asp-for="@productImages[i].ImageDescription" class="control-label"></label>
+                                <input name="imageDescription" asp-for="@productImages[i].ImageDescription" class="form-control" placeholder="Enter image description" />
+                                <span asp-validation-for="@productImages[i].ImageDescription" class="text-danger"></span>
+
+                                <input name="Id" type="hidden" asp-for="@productImages[i].Id" value="@productImages[i].Id" />
+                            </div>
+
+                            <div class="text-center mb-1" >
+                            <a class="text-danger btn btn-danger text-white" asp-action="DeleteImage" asp-route-id="@productImages[i].Id" asp-route-productId="@productId" ><i class="bi bi-trash ml-1" ></i>Delete Image</a>
+                             </div> 
+
+                        </div>
+
+                    </div>
+                        }
+                    </div>
+                
+                <input type="submit" value="Update" class="btn btn-outline-success float-right" />
+            </form>
+        </div>
+        
+      </div>
+
+
+</div>

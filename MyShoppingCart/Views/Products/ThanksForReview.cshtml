@@ -1,0 +1,20 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Update Product";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-2" style="background-color:aquamarine">
+            <h5>Thank you for your review!</h5>
+            <span>
+                <strong>
+                    Click
+                    <a asp-action="Details" asp-route-id="@Model">here</a>
+                     to return to product details.
+                </strong>
+            </span>
+        </div>
+    </div>
+</div>

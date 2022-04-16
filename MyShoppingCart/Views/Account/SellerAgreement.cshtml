@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Become a Seller";
+}
+
+<div class="row">
+
+    <div class="col-8 bg-light overflow-auto offset-2" style="height: calc(100vh - 200px)">
+        <h1 class="text-center">Seller Agreement</h1>
+
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the text.</p>
+        <p>This is the Last text.</p>
+    </div>
+
+    <form asp-action="AcceptSellerAgreement">
+        <div class="form-group mt-3">
+            <input class="btn btn-outline-success float-right" type="submit" value="Accept"/>
+            <a class="btn btn-outline-secondary" asp-controller="Products" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,94 @@
+﻿@{
+    List<ProductImage> productImages = ViewBag.Images != null ? ViewBag.Images : null;
+    List<ProductRating> productRatings = ViewBag.productRatings != null ? ViewBag.productRatings : null;
+    Product product = ViewBag.Product != null ? ViewBag.Product : null;
+
+    ViewData["Title"] = "Product details";
+    int i = 0;
+    int j = 0;
+    int k = -1;
+}
+
+<div class="row">
+    <div class="col-md-8 offset-sm-2">
+        <div class="card mb-12">
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <div class="card-header text-white" style="background-color:lightblue">
+                        <p class="card-text"><h5 class="card-title">@product.Name</h5></p>
+
+                        <div class="row">
+                            <div class="col">
+                                @await Html.PartialAsync("_DisplayRating", product.Rating)
+                            </div>
+
+                            <span> @string.Format("{0}  Number of Reviews: {1}    ", product.Rating.ToString("F2"), product.NumberOfReviews)<a asp-action="WriteReview" asp-route-productId="@product.Id"><i class="bi bi-pencil ml-2"> Write Review</i></a> </span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8" style="max-height:400px">
+                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" style="max-width:400px">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            @foreach (var item in productImages)
+                            {
+                                j++;
+                                k++;
+                                if (j > 1)
+                                {
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@k" aria-label="Slide @j"></button>
+                                }
+                            }
+                        </div>
+                        <div class="carousel-inner m-2">
+
+                            @foreach (var item in productImages)
+                            {
+                                i++;
+                                var active = i == 1 ? "active" : "";
+
+                            <div class="carousel-item  @active">
+                                <img src="@item.ImageURL" class="d-block w-100 rounded-3 img-fluid" alt="@product.Name" style="max-height:350px">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>@item.ImageDescription</h5>
+                                </div>
+                            </div>
+                            }
+
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    @*<img src="@Model.productImages[0].ImageURL" width="100%" alt="@Model.Name">*@
+                </div>
+                <div class="col-md-4" style="background-color:whitesmoke">
+                    <div class="card-body" >
+                        <p class="card-text">@product.Description</p>
+                        <p class="card-text">
+
+                        </p>
+
+                    </div>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <div class="card-footer">
+                        <p class="card-text">
+                            <a class="btn btn-outline-primary float-right" asp-action="Index">
+                                Back to List
+                            </a>
+                            <a class="btn btn-success text-white" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@product.Id"><i class="bi bi-cart-plus"></i> Add to Cart (Price @product.Price.ToString("c"))</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("_DisplayReviews", productRatings)
