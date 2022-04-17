@@ -136,9 +136,11 @@ namespace MyShoppingCart.Data.Services
             await _context.SaveChangesAsync();
         }
 
-		public async Task<bool> IsCategoryAssociatedWithProductAsync(int categoryId, int productId)
+		public async Task<bool> IsCategoryAssociatedWithProductAsync(int productId, int categoryId)
 		{
-            return await _context.ProductCategories.FirstOrDefaultAsync(x => x.ProductCategoryLookupId == categoryId && x.ProductId == productId) != null;
+            ProductCategory productCategory = await _context.ProductCategories.FirstOrDefaultAsync(x => x.ProductCategoryLookupId == categoryId && x.ProductId == productId);
+
+            return productCategory != null;
 		}
 
 		public async Task<SelectProductCategoriesVM> AddProductCategoryAsync(int categoryId, int productId)

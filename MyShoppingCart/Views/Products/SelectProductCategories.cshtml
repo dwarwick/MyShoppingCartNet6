@@ -148,7 +148,7 @@
 
 
 		if (request != null) {
-			var url = `/Products/AddCategoryToProduct?Id=${jsonData}&categoryId=${Id}`;
+			var url = `/Products/AddCategoryToProduct?productId=${jsonData}&categoryId=${Id}`;
 			request.open("POST", url, false);
 			//request.setRequestHeader("Content-Type", "text/plain");
 

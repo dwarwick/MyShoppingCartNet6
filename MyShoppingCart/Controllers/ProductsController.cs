@@ -354,15 +354,16 @@ namespace MyShoppingCart.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCategoryToProduct(int Id, int categoryId)
+        public async Task<IActionResult> AddCategoryToProduct(int productId, int categoryId)
 		{
             SelectProductCategoriesVM selectProductCategoriesVM = new SelectProductCategoriesVM();
 
-            if (!await _productService.IsCategoryAssociatedWithProductAsync(Id, categoryId))
+            if (!await _productService.IsCategoryAssociatedWithProductAsync(productId, categoryId))
 			{
-                selectProductCategoriesVM = await _productService.AddProductCategoryAsync(categoryId, Id);   
+                selectProductCategoriesVM = await _productService.AddProductCategoryAsync(categoryId, productId);   
 			}
-            return View("SelectProductCategories", selectProductCategoriesVM);
+                            
+            return RedirectToAction("SelectProductCategories", new { productId = productId});
         }
 
         [HttpGet]
