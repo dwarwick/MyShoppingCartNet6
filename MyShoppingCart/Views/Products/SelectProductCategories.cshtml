@@ -1,10 +1,10 @@
 ﻿@using MyShoppingCart.Data.ViewModels
-@model EditCategoriesVM
+@model SelectProductCategoriesVM
 @*@using MyShoppingCart.Data;*@
 
 
 @{
-	ViewData["Title"] = "Product Categories";
+	ViewData["Title"] = "Select Product Categories";
 	ProductCategoryLookup newCategory = new ProductCategoryLookup();
 }
 @*<link rel="stylesheet" href="~/css/EditCategories/demo.css" />*@
@@ -13,44 +13,57 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-
-			<h4>Edit Product Categories</h4>
-			<p>
-				Browse product categories below, or add new product categories.
-				To add a new category, enter the new category name into the
-				<span style="font-weight:bold">New Category Name</span>
-				text box below. If you want to enter the new category at the
-				top level, click the
-				<span style="font-weight:bold">Add Top Level Category</span>
-				button. To add a new sub-category, double click the parent
-				parent category of your new category.
-			</p>
-
+			<h4>Select Product Categories</h4>
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+				<label asp-for="editCategoriesVM.ProductCategoryLookup.CategoryName" class="control-label"></label>
+				<input class="form-control" id="catName" />
+			</div>
+		</div>
+	</div>
+
+
 
 	<div class="row">
 		<div class="col-md-8">
 			<div class="row justify-content-start">
 				<div class="col">
-					<form asp-action="AddRootCategory">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-						<div class="form-group">
-							<label asp-for="ProductCategoryLookup.CategoryName" class="control-label"></label>
-							<input asp-for="ProductCategoryLookup.CategoryName" class="form-control" id="catName" />
-							<span asp-validation-for="ProductCategoryLookup.CategoryName" class="text-danger"></span>
-						</div>
-						<div class="form-group my-1">
-							<input type="submit" value="Add Top Level Category" class="btn btn-outline-success float-right" />
-
-						</div>
-					</form>
 
 					@{
+						<ul class="my-2" style="list-style: none">
+							@{
+								foreach (ProductCategory category in @Model.product.productCategory)
+								{
+									string sFullCategoryPath = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == category.ProductCategoryLookupId).CategoryName;
+
+									int iParentCategoryId = category.productCategoryLookup.ParentCategoryId;
+
+									while (iParentCategoryId > 0)
+									{
+										ProductCategoryLookup parentCategory = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == iParentCategoryId);
+
+										sFullCategoryPath = $"{parentCategory.CategoryName} > {sFullCategoryPath}";
+
+										iParentCategoryId = parentCategory.ParentCategoryId;
+									}
+									//<a class="text-danger btn btn-danger text-white" asp-action="DeleteImage" asp-route-id="@productImages[i].Id" asp-route-productId="@productId" ><i class="bi bi-trash ml-1" ></i>Delete Image</a>
+
+									<li class="my-3">
+										<a class="text-danger btn btn-danger text-white me-3">
+											<i class="bi bi-trash"></i>
+										</a>@sFullCategoryPath
+									</li>
+								}
+							}
+						</ul>
+
 						int iParentCategory = 0;
 
-						List<ProductCategoryLookup> LevelCategories = Model.lstProductCategoryLookup.Where(x => x.ParentCategoryId == iParentCategory).OrderBy(x => x.CategoryName).ToList();
+						List<ProductCategoryLookup> LevelCategories = Model.editCategoriesVM.lstProductCategoryLookup.Where(x => x.ParentCategoryId == iParentCategory).OrderBy(x => x.CategoryName).ToList();
 
 						foreach (ProductCategoryLookup productCategory in LevelCategories)
 						{
@@ -67,7 +80,7 @@
 						string RenderSubcategory(ProductCategoryLookup subCategory)
 						{
 							string ret = "";
-							List<ProductCategoryLookup> SubCategories = Model.lstProductCategoryLookup.Where(x => x.ParentCategoryId == subCategory.Id).OrderBy(x => x.CategoryName).ToList();
+							List<ProductCategoryLookup> SubCategories = Model.editCategoriesVM.lstProductCategoryLookup.Where(x => x.ParentCategoryId == subCategory.Id).OrderBy(x => x.CategoryName).ToList();
 
 							foreach (ProductCategoryLookup item in SubCategories)
 							{
@@ -83,7 +96,7 @@
 
 						bool DoesSubCategoryExist(ProductCategoryLookup parentCategory)
 						{
-							return Model.lstProductCategoryLookup.Where(x => x.ParentCategoryId == parentCategory.Id).Count() > 0;
+							return Model.editCategoriesVM.lstProductCategoryLookup.Where(x => x.ParentCategoryId == parentCategory.Id).Count() > 0;
 						}
 
 						void SubCategoryYes(ProductCategoryLookup category)
@@ -116,10 +129,16 @@
 
 	function AddSubCategory(elem) {
 		event.stopPropagation();
-		var person = document.getElementById("catName").value;
+
+		let jsonData = JSON.parse('@Html.Raw(Json.Serialize(Model.product.Id))')
+
+		//const obj = JSON.parse(jsonData);
+		console.log(jsonData);
+
+		//var person = document.getElementById("catName").value;
 		var Id= $(elem).data('sub-id');
 
-		console.log(`person: ${person}, Id: ${Id}`)
+		console.log(`product: ${jsonData}, Id: ${Id}`)
 
 		var request;
 		if (window.XMLHttpRequest) {
@@ -129,7 +148,7 @@
 
 
 		if (request != null) {
-			var url = `/Products/EditCategoriesPost?Id=${Id}&category=${person}`;
+			var url = `/Products/AddCategoryToProduct?Id=${jsonData}&categoryId=${Id}`;
 			request.open("POST", url, false);
 			//request.setRequestHeader("Content-Type", "text/plain");
 

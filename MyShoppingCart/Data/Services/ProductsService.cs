@@ -99,7 +99,12 @@ namespace MyShoppingCart.Data.Services
             return ProductDetails;
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
+		public Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int Id)
+		{
+            return _context.ProductCategories.Where(x => x.ProductId == Id).ToListAsync();
+		}
+
+		public async Task<Product> GetProductByIdAsync(int id)
         {
             var ProductDetails = await _context.Products
                 .Include(c => c.productImages)
@@ -130,5 +135,26 @@ namespace MyShoppingCart.Data.Services
 
             await _context.SaveChangesAsync();
         }
-    }
+
+		public async Task<bool> IsCategoryAssociatedWithProductAsync(int categoryId, int productId)
+		{
+            return await _context.ProductCategories.FirstOrDefaultAsync(x => x.ProductCategoryLookupId == categoryId && x.ProductId == productId) != null;
+		}
+
+		public async Task<SelectProductCategoriesVM> AddProductCategoryAsync(int categoryId, int productId)
+		{
+
+            await _context.ProductCategories.AddAsync(new ProductCategory { ProductId = productId, ProductCategoryLookupId = categoryId });
+            _context.SaveChanges();
+
+            
+            return new SelectProductCategoriesVM
+            {
+                editCategoriesVM = await GetAllProductCategoryLookupAsync(),
+                lstProductCategories = await GetProductCategoriesByIdAsync(productId),
+                product = await GetProductByIdAsync(productId)
+            };
+        }
+		
+	}
 }

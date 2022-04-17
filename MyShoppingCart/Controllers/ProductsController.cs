@@ -50,12 +50,12 @@ namespace MyShoppingCart.Controllers
         {
             ReadCartIDFromCookie();
 
-            string SubDomain = GetSubDomain(HttpContext);            
+            string SubDomain = GetSubDomain(HttpContext);
             var allProducts = await _productService.GetAllProductsWithImagesAsync(SubDomain);
 
             ViewBag.host = SubDomain;
 
-            return View("Index", allProducts);          
+            return View("Index", allProducts);
         }
 
         public async Task<IActionResult> Filter(string searchString)
@@ -64,7 +64,7 @@ namespace MyShoppingCart.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                var filteredResult = allProducts.Where(n => n.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) 
+                var filteredResult = allProducts.Where(n => n.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)
                                                         || n.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase)
                                                         && n.Enabled == true).ToList();
                 return View("Index", filteredResult);
@@ -88,7 +88,7 @@ namespace MyShoppingCart.Controllers
         }
 
         //GET: Movies/Create
-        [Authorize]        
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);
@@ -125,7 +125,7 @@ namespace MyShoppingCart.Controllers
 
             Product product = await _productService.GetByIdAsync(productVM.Id);
 
-            return View("ImagesEdit", product);            
+            return View("ImagesEdit", product);
         }
 
 
@@ -210,7 +210,7 @@ namespace MyShoppingCart.Controllers
                         {
                             await iFormFile.CopyToAsync(stream);
                         }
-                        
+
                         bSuccess = await StorageHelper.UploadFileToStorage(iFormFile, filePath, _ConnectionString, _ContainerName, user.Id);
                         System.IO.File.Delete(filePath);
 
@@ -247,7 +247,7 @@ namespace MyShoppingCart.Controllers
         {
             var subDomain = string.Empty;
 
-            var host = httpContext.Request.Host.Host;            
+            var host = httpContext.Request.Host.Host;
 
             if (!string.IsNullOrWhiteSpace(host))
             {
@@ -255,12 +255,12 @@ namespace MyShoppingCart.Controllers
 
                 if (pieces.Length == 3)
                 {
-                    if(pieces[1].Equals("myshoppingcart", StringComparison.OrdinalIgnoreCase) && pieces[2].Equals("biz", StringComparison.OrdinalIgnoreCase))
+                    if (pieces[1].Equals("myshoppingcart", StringComparison.OrdinalIgnoreCase) && pieces[2].Equals("biz", StringComparison.OrdinalIgnoreCase))
                     {
                         subDomain = pieces[0];
                     }
                 }
-                    
+
                 else
                     return host;
             }
@@ -300,7 +300,7 @@ namespace MyShoppingCart.Controllers
         [HttpGet]
         public async Task<IActionResult> EditImageDescriptions(int productId)
         {
-            var product= await _productService.GetProductByIdAsync(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
 
             IEnumerable<ProductImage> productImages = product.productImages;
             int productID = product.Id;
@@ -312,16 +312,16 @@ namespace MyShoppingCart.Controllers
         }
 
         [HttpPost]
-        public async  Task<IActionResult> EditImageDescriptions()
+        public async Task<IActionResult> EditImageDescriptions()
         {
             ProductImage productImage = null;
             List<string> Descriptions = new List<string>();
 
-            foreach(var item in Request.Form["imageDescription"])            
+            foreach (var item in Request.Form["imageDescription"])
                 Descriptions.Add(item);
 
             int idx = 0;
-            foreach(var imageId in Request.Form["Id"])
+            foreach (var imageId in Request.Form["Id"])
             {
                 productImage = await _imageService.GetByIdAsync(int.Parse(imageId));
 
@@ -337,19 +337,48 @@ namespace MyShoppingCart.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> SelectProductCategories(int productId)
+        {
+            var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();
+            var product = await _productService.GetProductByIdAsync(productId);
+            var productCategories = await _productService.GetProductCategoriesByIdAsync(productId);
+
+            SelectProductCategoriesVM selectProductCategoriesVM = new SelectProductCategoriesVM
+            {
+                editCategoriesVM = productCategoryLookup,
+                lstProductCategories = productCategories,
+                product = product
+            };
+
+            return View(selectProductCategoriesVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCategoryToProduct(int Id, int categoryId)
+		{
+            SelectProductCategoriesVM selectProductCategoriesVM = new SelectProductCategoriesVM();
+
+            if (!await _productService.IsCategoryAssociatedWithProductAsync(Id, categoryId))
+			{
+                selectProductCategoriesVM = await _productService.AddProductCategoryAsync(categoryId, Id);   
+			}
+            return View("SelectProductCategories", selectProductCategoriesVM);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> EditCategories()
         {
-            var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();            
+            var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();
 
             return View(productCategoryLookup);
         }
 
-      
+
         public async Task<IActionResult> EditCategoriesPost(int Id, string category)
         {
             EditCategoriesVM editCategoriesVM = new EditCategoriesVM();
-            
-            if(category != null && Id > 0 && !string.IsNullOrWhiteSpace(category.Trim()))
+
+            if (category != null && Id > 0 && !string.IsNullOrWhiteSpace(category.Trim()))
                 editCategoriesVM = await _productService.AddNewCategoryLookupAsync(Id, category);
             else
                 return RedirectToAction("EditCategories");
@@ -362,8 +391,8 @@ namespace MyShoppingCart.Controllers
         {
             EditCategoriesVM editCategoriesVM = new EditCategoriesVM();
             string category = Request.Form["ProductCategoryLookup.CategoryName"];
-            if(!string.IsNullOrWhiteSpace(category.Trim()))
-                editCategoriesVM = await _productService.AddNewCategoryLookupAsync(0,category);
+            if (!string.IsNullOrWhiteSpace(category.Trim()))
+                editCategoriesVM = await _productService.AddNewCategoryLookupAsync(0, category);
 
             return RedirectToAction("EditCategories");
         }

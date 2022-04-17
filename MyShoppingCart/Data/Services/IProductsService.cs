@@ -22,5 +22,8 @@ namespace MyShoppingCart.Data.Services
 
         Task<EditCategoriesVM> GetAllProductCategoryLookupAsync();
         Task<EditCategoriesVM> AddNewCategoryLookupAsync(int Id, string category);
+        Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int Id);
+        Task<bool> IsCategoryAssociatedWithProductAsync(int categoryId, int productId);
+        Task<SelectProductCategoriesVM> AddProductCategoryAsync(int categoryId, int productId);
     }
 }
