@@ -18,17 +18,6 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-12">
-			<div class="form-group">
-				<label asp-for="editCategoriesVM.ProductCategoryLookup.CategoryName" class="control-label"></label>
-				<input class="form-control" id="catName" />
-			</div>
-		</div>
-	</div>
-
-
-
-	<div class="row">
 		<div class="col-md-8">
 			<div class="row justify-content-start">
 				<div class="col">
@@ -36,9 +25,9 @@
 					@{
 						<ul class="my-2" style="list-style: none">
 							@{
-								if (@Model.product.productCategory != null)
+								if (@Model.product.product.productCategory != null)
 								{
-									foreach (ProductCategory category in @Model.product.productCategory)
+									foreach (ProductCategory category in @Model.product.product.productCategory)
 									{
 										string sFullCategoryPath = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == category.ProductCategoryLookupId).CategoryName;
 
@@ -52,16 +41,14 @@
 
 											iParentCategoryId = parentCategory.ParentCategoryId;
 										}
-											//<a class="text-danger btn btn-danger text-white" asp-action="DeleteImage" asp-route-id="@productImages[i].Id" asp-route-productId="@productId" ><i class="bi bi-trash ml-1" ></i>Delete Image</a>
 
 										<li class="my-3">
-											<a class="text-danger btn btn-danger text-white me-3" href="/Products/DeleteCategoryFromProduct?categoryId=@category.ProductCategoryLookupId&productId=@Model.product.Id">
+											<a class="text-danger btn btn-danger text-white me-3" href="/Products/DeleteCategoryFromProduct?categoryId=@category.ProductCategoryLookupId&productId=@Model.product.product.Id">
 												<i class="bi bi-trash"></i>
 											</a>@sFullCategoryPath
 										</li>
 									}
 								}
-
 							}
 						</ul>
 
@@ -134,7 +121,7 @@
 	function AddSubCategory(elem) {
 		event.stopPropagation();
 
-		let jsonData = JSON.parse('@Html.Raw(Json.Serialize(Model.product.Id))')
+		let jsonData = JSON.parse('@Html.Raw(Json.Serialize(Model.product.product.Id))')
 
 		//const obj = JSON.parse(jsonData);
 		console.log(jsonData);
@@ -169,8 +156,6 @@
 		}
 
 	}
-
-
 
 		$('.sub-menu ul').hide();
 		$(".sub-menu a").click(function () {

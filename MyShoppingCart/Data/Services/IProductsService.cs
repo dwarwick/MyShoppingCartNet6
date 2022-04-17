@@ -14,7 +14,7 @@ namespace MyShoppingCart.Data.Services
         //Task<Movie> GetProductByIdAsync(int id);        
         Task<NewProductVM> AddNewProductAsync(NewProductVM data);
         Task<List<Product>> GetAllProductsWithImagesAsync(string Subdomain = "");
-        Task<Product> GetProductByIdAsync(int Id);
+        Task<EditProductsVM> GetProductByIdAsync(int Id);
         Task UpdateProductAsync(Product data);
         Task<List<ProductRating>> GetRatingsForProductAsync(int productId);
         ProductRating GetRatingForNewReview(int productId, ApplicationUser applicationUser);

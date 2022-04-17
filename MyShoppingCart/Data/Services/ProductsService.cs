@@ -98,12 +98,19 @@ namespace MyShoppingCart.Data.Services
             return await _context.ProductCategories.Where(x => x.ProductId == Id).ToListAsync();
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
+        public async Task<EditProductsVM> GetProductByIdAsync(int id)
         {
-            var ProductDetails = await _context.Products
+            EditProductsVM editProductsVM = new EditProductsVM
+            {
+                product = await _context.Products
                 .Include(c => c.productImages)
-                .FirstOrDefaultAsync(n => n.Id == id);
-            return ProductDetails;
+                .Include(D => D.productCategory)
+                .FirstOrDefaultAsync(n => n.Id == id),
+                editCategoriesVM = await GetAllProductCategoryLookupAsync()
+        };
+
+            
+            return editProductsVM;
         }
 
         public ProductRating GetRatingForNewReview(int productId, ApplicationUser applicationUser)

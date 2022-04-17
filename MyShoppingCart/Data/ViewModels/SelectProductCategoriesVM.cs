@@ -9,6 +9,6 @@ namespace MyShoppingCart.Data.ViewModels
 
         public List<ProductCategory> lstProductCategories { get; set; }
 
-		public Product product { get; set; }
+		public EditProductsVM product { get; set; }
 	}
 }

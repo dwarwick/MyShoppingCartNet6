@@ -1,82 +1,111 @@
-﻿@model Product
+﻿@using MyShoppingCart.Data.ViewModels;
+@model EditProductsVM
 @*@using MyShoppingCart.Data;*@
 
 @{
-    ViewData["Title"] = "Update Product";
+	ViewData["Title"] = "Update Product";
 }
 
 <div class="row">
-    <div class="col-md-12">
-        <p>
-            <h4>Update Product</h4>
-        </p>
-    </div>
+	<div class="col-md-12">
+		<p>
+			<h4>Update Product</h4>
+		</p>
+	</div>
 </div>
 
 
 <div class="row">
 
-    <div class="col-6">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="col-6">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+			<div class="form-group">
+				<label asp-for="product.Name" class="control-label"></label>
+				<input asp-for="product.Name" class="form-control" />
+				<span asp-validation-for="product.Name" class="text-danger"></span>
+			</div>
 
-            <div class="form-group">
-                <input type="hidden" asp-for="Id" class="form-control" />
-            </div>
+			<div class="form-group">
+				<input type="hidden" asp-for="product.Id" class="form-control" />
+			</div>
 
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" type="text" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
+			<div class="form-group">
+				<label asp-for="product.Price" class="control-label"></label>
+				<input asp-for="product.Price" type="text" class="form-control" />
+				<span asp-validation-for="product.Price" class="text-danger"></span>
+			</div>
 
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+			<div class="form-group">
+				<label asp-for="product.Description" class="control-label"></label>
+				<textarea asp-for="product.Description" class="form-control"></textarea>
+				<span asp-validation-for="product.Description" class="text-danger"></span>
+			</div>
 
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" asp-for="Enabled">
-                <label class="form-check-label" asp-for="Enabled">
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" asp-for="product.Enabled">
+				<label class="form-check-label" asp-for="product.Enabled">
 
-                </label>
-            </div>
+				</label>
+			</div>
 
-            <div class="form-group mt-1">
-                <input type="submit" value="Update" class="btn btn-outline-success float-right" />
-                <a class="btn btn-outline-secondary" asp-action="Index">Show all</a>
-                <a class="btn btn-outline-secondary" asp-action="UploadFile" asp-route-productId="@Model.Id">Upload Images</a>
-                <a class="btn btn-outline-secondary" asp-action="EditImageDescriptions" asp-route-productId="@Model.Id">Edit Images</a>  
-                <a class="btn btn-outline-secondary" asp-action="SelectProductCategories" asp-route-productId="@Model.Id">Select Product Categories</a>
-            </div>
-        </form>
-    </div>
+			<div class="form-group mt-1">
+				<input type="submit" value="Update" class="btn btn-outline-success float-right" />
+				<a class="btn btn-outline-secondary" asp-action="Index">Show all</a>
+				<a class="btn btn-outline-secondary" asp-action="UploadFile" asp-route-productId="@Model.product.Id">Upload Images</a>
+				<a class="btn btn-outline-secondary" asp-action="EditImageDescriptions" asp-route-productId="@Model.product.Id">Edit Images</a>
+				<a class="btn btn-outline-secondary" asp-action="SelectProductCategories" asp-route-productId="@Model.product.Id">Select Product Categories</a>
+			</div>
+		</form>
+	</div>
+
+	<h3>Product Categories</h3>
+	<ul class="my-2" style="list-style: none">
+		@{
+			if (@Model.product.productCategory != null)
+			{
+				foreach (ProductCategory category in @Model.product.productCategory)
+				{
+					string sFullCategoryPath = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == category.ProductCategoryLookupId).CategoryName;
+
+					int iParentCategoryId = category.productCategoryLookup.ParentCategoryId;
+
+					while (iParentCategoryId > 0)
+					{
+						ProductCategoryLookup parentCategory = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == iParentCategoryId);
+
+						sFullCategoryPath = $"{parentCategory.CategoryName} > {sFullCategoryPath}";
+
+						iParentCategoryId = parentCategory.ParentCategoryId;
+					}
+
+					<li class="my-3">						
+						@sFullCategoryPath
+					</li>
+				}
+			}
+		}
+	</ul>
 </div>
 
 
 
 @section Scripts{
 
-    <script>
+<script>
 
-        $(document).ready(function () {
-            // Initialization
-            new AutoNumeric('#Price', {
-                currencySymbol: '$',
-                alwaysAllowDecimalCharacter: true,
-                decimalCharacterAlternative: ".",
-                outputFormat: "number",
-                unformatOnSubmit: true
-            });
-        })
-    </script>
+	$(document).ready(function () {
+		// Initialization
+		new AutoNumeric('#Price', {
+			currencySymbol: '$',
+			alwaysAllowDecimalCharacter: true,
+			decimalCharacterAlternative: ".",
+			outputFormat: "number",
+			unformatOnSubmit: true
+		});
+	})
+</script>
 }
 
 
