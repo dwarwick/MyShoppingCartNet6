@@ -366,6 +366,12 @@ namespace MyShoppingCart.Controllers
             return RedirectToAction("SelectProductCategories", new { productId = productId});
         }
 
+        public async Task<IActionResult> DeleteCategoryFromProduct(int categoryId, int productId)
+		{
+            await _productService.DeleteCategoryFromProductAsync(productId, categoryId);
+            return RedirectToAction("SelectProductCategories", new { productId = productId });
+        }
+
         [HttpGet]
         public async Task<IActionResult> EditCategories()
         {

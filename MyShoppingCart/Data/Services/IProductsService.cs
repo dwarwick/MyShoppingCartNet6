@@ -25,5 +25,6 @@ namespace MyShoppingCart.Data.Services
         Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int Id);
         Task<bool> IsCategoryAssociatedWithProductAsync(int categoryId, int productId);
         Task<SelectProductCategoriesVM> AddProductCategoryAsync(int productId, int categoryId);
+        Task DeleteCategoryFromProductAsync(int productId, int categoryId);
     }
 }

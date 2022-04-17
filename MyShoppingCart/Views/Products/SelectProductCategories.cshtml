@@ -36,28 +36,32 @@
 					@{
 						<ul class="my-2" style="list-style: none">
 							@{
-								foreach (ProductCategory category in @Model.product.productCategory)
+								if (@Model.product.productCategory != null)
 								{
-									string sFullCategoryPath = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == category.ProductCategoryLookupId).CategoryName;
-
-									int iParentCategoryId = category.productCategoryLookup.ParentCategoryId;
-
-									while (iParentCategoryId > 0)
+									foreach (ProductCategory category in @Model.product.productCategory)
 									{
-										ProductCategoryLookup parentCategory = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == iParentCategoryId);
+										string sFullCategoryPath = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == category.ProductCategoryLookupId).CategoryName;
 
-										sFullCategoryPath = $"{parentCategory.CategoryName} > {sFullCategoryPath}";
+										int iParentCategoryId = category.productCategoryLookup.ParentCategoryId;
 
-										iParentCategoryId = parentCategory.ParentCategoryId;
+										while (iParentCategoryId > 0)
+										{
+											ProductCategoryLookup parentCategory = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == iParentCategoryId);
+
+											sFullCategoryPath = $"{parentCategory.CategoryName} > {sFullCategoryPath}";
+
+											iParentCategoryId = parentCategory.ParentCategoryId;
+										}
+											//<a class="text-danger btn btn-danger text-white" asp-action="DeleteImage" asp-route-id="@productImages[i].Id" asp-route-productId="@productId" ><i class="bi bi-trash ml-1" ></i>Delete Image</a>
+
+										<li class="my-3">
+											<a class="text-danger btn btn-danger text-white me-3" href="/Products/DeleteCategoryFromProduct?categoryId=@category.ProductCategoryLookupId&productId=@Model.product.Id">
+												<i class="bi bi-trash"></i>
+											</a>@sFullCategoryPath
+										</li>
 									}
-									//<a class="text-danger btn btn-danger text-white" asp-action="DeleteImage" asp-route-id="@productImages[i].Id" asp-route-productId="@productId" ><i class="bi bi-trash ml-1" ></i>Delete Image</a>
-
-									<li class="my-3">
-										<a class="text-danger btn btn-danger text-white me-3">
-											<i class="bi bi-trash"></i>
-										</a>@sFullCategoryPath
-									</li>
 								}
+
 							}
 						</ul>
 

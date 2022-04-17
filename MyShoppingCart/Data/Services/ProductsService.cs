@@ -20,22 +20,22 @@ namespace MyShoppingCart.Data.Services
             _context = context;
         }
 
-		public async Task<EditCategoriesVM> AddNewCategoryLookupAsync(int Id, string category)
-		{
-			var ProductCategoryLookup = new ProductCategoryLookup 
-            { 
+        public async Task<EditCategoriesVM> AddNewCategoryLookupAsync(int Id, string category)
+        {
+            var ProductCategoryLookup = new ProductCategoryLookup
+            {
                 CategoryName = category,
-                ParentCategoryId = Id                
+                ParentCategoryId = Id
             };
             await _context.ProductCategoryLookups.AddAsync(ProductCategoryLookup);
             await _context.SaveChangesAsync();
 
             return await GetAllProductCategoryLookupAsync();
-		}
+        }
 
-		
 
-		public async Task<NewProductVM> AddNewProductAsync(NewProductVM data)
+
+        public async Task<NewProductVM> AddNewProductAsync(NewProductVM data)
         {
             var newProduct = new Product()
             {
@@ -67,20 +67,14 @@ namespace MyShoppingCart.Data.Services
             product.NumberOfReviews = productRatings.Count();
             _context.SaveChanges();
 
-
-
-
-
-
-
             return productRating;
         }
 
         public async Task<EditCategoriesVM> GetAllProductCategoryLookupAsync()
         {
-            EditCategoriesVM editCategoriesVM = new EditCategoriesVM 
-            { 
-                lstProductCategoryLookup = await _context.ProductCategoryLookups.ToListAsync() 
+            EditCategoriesVM editCategoriesVM = new EditCategoriesVM
+            {
+                lstProductCategoryLookup = await _context.ProductCategoryLookups.ToListAsync()
             };
             return editCategoriesVM;
         }
@@ -99,12 +93,12 @@ namespace MyShoppingCart.Data.Services
             return ProductDetails;
         }
 
-		public Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int Id)
-		{
-            return _context.ProductCategories.Where(x => x.ProductId == Id).ToListAsync();
-		}
+        public async Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int Id)
+        {
+            return await _context.ProductCategories.Where(x => x.ProductId == Id).ToListAsync();
+        }
 
-		public async Task<Product> GetProductByIdAsync(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
             var ProductDetails = await _context.Products
                 .Include(c => c.productImages)
@@ -127,7 +121,7 @@ namespace MyShoppingCart.Data.Services
             .Include(x => x.product)
             .Include(x => x.applicationUser)
             .OrderBy(x => x.Date).ToListAsync();
-        
+
 
         public async Task UpdateProductAsync(Product data)
         {
@@ -136,20 +130,20 @@ namespace MyShoppingCart.Data.Services
             await _context.SaveChangesAsync();
         }
 
-		public async Task<bool> IsCategoryAssociatedWithProductAsync(int productId, int categoryId)
-		{
+        public async Task<bool> IsCategoryAssociatedWithProductAsync(int productId, int categoryId)
+        {
             ProductCategory productCategory = await _context.ProductCategories.FirstOrDefaultAsync(x => x.ProductCategoryLookupId == categoryId && x.ProductId == productId);
 
             return productCategory != null;
-		}
+        }
 
-		public async Task<SelectProductCategoriesVM> AddProductCategoryAsync(int categoryId, int productId)
-		{
+        public async Task<SelectProductCategoriesVM> AddProductCategoryAsync(int categoryId, int productId)
+        {
 
             await _context.ProductCategories.AddAsync(new ProductCategory { ProductId = productId, ProductCategoryLookupId = categoryId });
             _context.SaveChanges();
 
-            
+
             return new SelectProductCategoriesVM
             {
                 editCategoriesVM = await GetAllProductCategoryLookupAsync(),
@@ -157,6 +151,12 @@ namespace MyShoppingCart.Data.Services
                 product = await GetProductByIdAsync(productId)
             };
         }
-		
-	}
+
+        public async Task DeleteCategoryFromProductAsync(int productId, int categoryId)
+        {
+            List<ProductCategory> productCategories = await _context.ProductCategories.Where(x => x.ProductCategoryLookupId == categoryId && x.ProductId == productId).ToListAsync();
+            _context.ProductCategories.RemoveRange(productCategories);
+            await _context.SaveChangesAsync();
+        }
+    }
 }
