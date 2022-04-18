@@ -81,7 +81,7 @@ namespace MyShoppingCart.Controllers
 
             if (item != null)
             {
-                _shoppingCart.AddItemToCart(item.product, applicationUser, ReadCartIDFromCookie());
+                _shoppingCart.AddItemToCart(item.productModel, applicationUser, ReadCartIDFromCookie());
             }
             return RedirectToAction(nameof(ShoppingCart));
         }
@@ -93,7 +93,7 @@ namespace MyShoppingCart.Controllers
 
             if (item != null)
             {
-                _shoppingCart.RemoveItemFromCart(item.product, _serviceProvider);
+                _shoppingCart.RemoveItemFromCart(item.productModel, _serviceProvider);
             }
             return RedirectToAction(nameof(ShoppingCart));
         }

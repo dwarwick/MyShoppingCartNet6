@@ -22,30 +22,31 @@
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 			<div class="form-group">
-				<label asp-for="product.Name" class="control-label"></label>
-				<input asp-for="product.Name" class="form-control" />
-				<span asp-validation-for="product.Name" class="text-danger"></span>
+				<label asp-for="productModel.Name" class="control-label"></label>
+				<input asp-for="productModel.Name" class="form-control" />
+				<span asp-validation-for="productModel.Name" class="text-danger"></span>
 			</div>
 
 			<div class="form-group">
-				<input type="hidden" asp-for="product.Id" class="form-control" />
+				<input type="hidden" asp-for="productModel.Id" class="form-control" />
+			</div>
+
+			
+			<div class="form-group">
+				<label asp-for="productModel.Price" class="control-label"></label>
+				<input asp-for="productModel.Price" type="text" class="form-control" />
+				<span asp-validation-for="productModel.Price" class="text-danger"></span>
 			</div>
 
 			<div class="form-group">
-				<label asp-for="product.Price" class="control-label"></label>
-				<input asp-for="product.Price" type="text" class="form-control" />
-				<span asp-validation-for="product.Price" class="text-danger"></span>
-			</div>
-
-			<div class="form-group">
-				<label asp-for="product.Description" class="control-label"></label>
-				<textarea asp-for="product.Description" class="form-control"></textarea>
-				<span asp-validation-for="product.Description" class="text-danger"></span>
+				<label asp-for="productModel.Description" class="control-label"></label>
+				<textarea asp-for="productModel.Description" class="form-control"></textarea>
+				<span asp-validation-for="productModel.Description" class="text-danger"></span>
 			</div>
 
 			<div class="form-check">
-				<input class="form-check-input" type="checkbox" asp-for="product.Enabled">
-				<label class="form-check-label" asp-for="product.Enabled">
+				<input class="form-check-input" type="checkbox" asp-for="productModel.Enabled">
+				<label class="form-check-label" asp-for="productModel.Enabled">
 
 				</label>
 			</div>
@@ -53,9 +54,9 @@
 			<div class="form-group mt-1">
 				<input type="submit" value="Update" class="btn btn-outline-success float-right" />
 				<a class="btn btn-outline-secondary" asp-action="Index">Show all</a>
-				<a class="btn btn-outline-secondary" asp-action="UploadFile" asp-route-productId="@Model.product.Id">Upload Images</a>
-				<a class="btn btn-outline-secondary" asp-action="EditImageDescriptions" asp-route-productId="@Model.product.Id">Edit Images</a>
-				<a class="btn btn-outline-secondary" asp-action="SelectProductCategories" asp-route-productId="@Model.product.Id">Select Product Categories</a>
+				<a class="btn btn-outline-secondary" asp-action="UploadFile" asp-route-productId="@Model.productModel.Id">Upload Images</a>
+				<a class="btn btn-outline-secondary" asp-action="EditImageDescriptions" asp-route-productId="@Model.productModel.Id">Edit Images</a>
+				<a class="btn btn-outline-secondary" asp-action="SelectProductCategories" asp-route-productId="@Model.productModel.Id">Select Product Categories</a>
 			</div>
 		</form>
 	</div>
@@ -63,9 +64,9 @@
 	<h3>Product Categories</h3>
 	<ul class="my-2" style="list-style: none">
 		@{
-			if (@Model.product.productCategory != null)
+			if (@Model.productModel.productCategory != null)
 			{
-				foreach (ProductCategory category in @Model.product.productCategory)
+				foreach (ProductCategory category in @Model.productModel.productCategory)
 				{
 					string sFullCategoryPath = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == category.ProductCategoryLookupId).CategoryName;
 

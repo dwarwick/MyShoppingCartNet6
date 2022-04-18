@@ -79,7 +79,7 @@ namespace MyShoppingCart.Controllers
             var productDetail = await _productService.GetProductByIdAsync(id);
             var productRatings = await _productService.GetRatingsForProductAsync(id);
 
-            ViewBag.Images = productDetail.product.productImages;
+            ViewBag.Images = productDetail.productModel.productImages;
             ViewBag.Product = productDetail;
             ViewBag.productRatings = productRatings;
             return View();
@@ -138,22 +138,24 @@ namespace MyShoppingCart.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Product product, int id = 0)
+        public async Task<IActionResult> Edit(EditProductsVM product, int id = 0)
         {
-            if (id > 0 && id != product.Id) return View("NotFound");
+            if (id > 0 && id != product.productModel.Id) return View("NotFound");
 
             EditProductsVM updatedProduct = await _productService.GetProductByIdAsync(id);
 
-            updatedProduct.product.Name = product.Name;
-            updatedProduct.product.Description = product.Description;
-            updatedProduct.product.Price = product.Price;
-            updatedProduct.product.Enabled = product.Enabled;
+            product.productModel.applicationUser = updatedProduct.productModel.applicationUser;
 
-            if (!ModelState.IsValid)
+            updatedProduct.productModel.Name = product.productModel.Name;
+            updatedProduct.productModel.Description = product.productModel.Description;
+            updatedProduct.productModel.Price = product.productModel.Price;
+            updatedProduct.productModel.Enabled = product.productModel.Enabled;
+
+			if (!ModelState.IsValid)
             {
                 return View(updatedProduct);
             }
-            await _productService.UpdateProductAsync(updatedProduct.product);
+            await _productService.UpdateProductAsync(updatedProduct.productModel);
             return RedirectToAction(nameof(Edit), updatedProduct);
         }
 
@@ -181,7 +183,7 @@ namespace MyShoppingCart.Controllers
         public async Task<IActionResult> UploadFile(int productId)
         {
             EditProductsVM product = await _productService.GetProductByIdAsync(productId);
-            return View("ImagesEdit", product.product);
+            return View("ImagesEdit", product.productModel);
         }
 
         [HttpPost]
@@ -302,8 +304,8 @@ namespace MyShoppingCart.Controllers
         {
             var product = await _productService.GetProductByIdAsync(productId);
 
-            IEnumerable<ProductImage> productImages = product.product.productImages;
-            int productID = product.product.Id;
+            IEnumerable<ProductImage> productImages = product.productModel.productImages;
+            int productID = product.productModel.Id;
 
             ViewBag.productImages = productImages;
             ViewBag.productId = productID;

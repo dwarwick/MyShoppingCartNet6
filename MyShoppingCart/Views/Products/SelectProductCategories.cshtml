@@ -25,9 +25,9 @@
 					@{
 						<ul class="my-2" style="list-style: none">
 							@{
-								if (@Model.product.product.productCategory != null)
+								if (@Model.product.productModel.productCategory != null)
 								{
-									foreach (ProductCategory category in @Model.product.product.productCategory)
+									foreach (ProductCategory category in @Model.product.productModel.productCategory)
 									{
 										string sFullCategoryPath = @Model.editCategoriesVM.lstProductCategoryLookup.Find(y => y.Id == category.ProductCategoryLookupId).CategoryName;
 
@@ -43,7 +43,7 @@
 										}
 
 										<li class="my-3">
-											<a class="text-danger btn btn-danger text-white me-3" href="/Products/DeleteCategoryFromProduct?categoryId=@category.ProductCategoryLookupId&productId=@Model.product.product.Id">
+											<a class="text-danger btn btn-danger text-white me-3" href="/Products/DeleteCategoryFromProduct?categoryId=@category.ProductCategoryLookupId&productId=@Model.product.productModel.Id">
 												<i class="bi bi-trash"></i>
 											</a>@sFullCategoryPath
 										</li>
@@ -121,7 +121,7 @@
 	function AddSubCategory(elem) {
 		event.stopPropagation();
 
-		let jsonData = JSON.parse('@Html.Raw(Json.Serialize(Model.product.product.Id))')
+		let jsonData = JSON.parse('@Html.Raw(Json.Serialize(Model.product.productModel.Id))')
 
 		//const obj = JSON.parse(jsonData);
 		console.log(jsonData);

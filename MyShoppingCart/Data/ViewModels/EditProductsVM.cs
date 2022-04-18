@@ -4,7 +4,7 @@ namespace MyShoppingCart.Data.ViewModels
 {
     public class EditProductsVM
     {
-		public Product product { get; set; }
+		public Product productModel { get; set; }
 		public EditCategoriesVM editCategoriesVM { get; set; }
 	}
 }

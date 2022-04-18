@@ -1,7 +1,8 @@
-﻿@{
+﻿@using MyShoppingCart.Data.ViewModels
+@{
     List<ProductImage> productImages = ViewBag.Images != null ? ViewBag.Images : null;
     List<ProductRating> productRatings = ViewBag.productRatings != null ? ViewBag.productRatings : null;
-    Product product = ViewBag.Product != null ? ViewBag.Product : null;
+    EditProductsVM product = ViewBag.Product != null ? ViewBag.Product : null;
 
     ViewData["Title"] = "Product details";
     int i = 0;
@@ -15,14 +16,14 @@
             <div class="row g-0">
                 <div class="col-md-12">
                     <div class="card-header text-white" style="background-color:lightblue">
-                        <p class="card-text"><h5 class="card-title">@product.Name</h5></p>
+                        <p class="card-text"><h5 class="card-title">@product.productModel.Name</h5></p>
 
                         <div class="row">
                             <div class="col">
-                                @await Html.PartialAsync("_DisplayRating", product.Rating)
+                                @await Html.PartialAsync("_DisplayRating", product.productModel.Rating)
                             </div>
 
-                            <span> @string.Format("{0}  Number of Reviews: {1}    ", product.Rating.ToString("F2"), product.NumberOfReviews)<a asp-action="WriteReview" asp-route-productId="@product.Id"><i class="bi bi-pencil ml-2"> Write Review</i></a> </span>
+                            <span> @string.Format("{0}  Number of Reviews: {1}    ", product.productModel.Rating.ToString("F2"), product.productModel.NumberOfReviews)<a asp-action="WriteReview" asp-route-productId="@product.productModel.Id"><i class="bi bi-pencil ml-2"> Write Review</i></a> </span>
 
                         </div>
                     </div>
@@ -49,7 +50,7 @@
                                 var active = i == 1 ? "active" : "";
 
                             <div class="carousel-item  @active">
-                                <img src="@item.ImageURL" class="d-block w-100 rounded-3 img-fluid" alt="@product.Name" style="max-height:350px">
+                                <img src="@item.ImageURL" class="d-block w-100 rounded-3 img-fluid" alt="@product.productModel.Name" style="max-height:350px">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h5>@item.ImageDescription</h5>
                                 </div>
@@ -70,7 +71,7 @@
                 </div>
                 <div class="col-md-4" style="background-color:whitesmoke">
                     <div class="card-body" >
-                        <p class="card-text">@product.Description</p>
+                        <p class="card-text">@product.productModel.Description</p>
                         <p class="card-text">
 
                         </p>
@@ -83,7 +84,7 @@
                             <a class="btn btn-outline-primary float-right" asp-action="Index">
                                 Back to List
                             </a>
-                            <a class="btn btn-success text-white" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@product.Id"><i class="bi bi-cart-plus"></i> Add to Cart (Price @product.Price.ToString("c"))</a>
+                            <a class="btn btn-success text-white" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@product.productModel.Id"><i class="bi bi-cart-plus"></i> Add to Cart (Price @product.productModel.Price.ToString("c"))</a>
                         </p>
                     </div>
                 </div>

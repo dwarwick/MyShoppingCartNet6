@@ -102,9 +102,10 @@ namespace MyShoppingCart.Data.Services
         {
             EditProductsVM editProductsVM = new EditProductsVM
             {
-                product = await _context.Products
+                productModel = await _context.Products
                 .Include(c => c.productImages)
                 .Include(D => D.productCategory)
+                .Include(u => u.applicationUser)
                 .FirstOrDefaultAsync(n => n.Id == id),
                 editCategoriesVM = await GetAllProductCategoryLookupAsync()
         };

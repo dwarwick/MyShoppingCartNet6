@@ -25,7 +25,7 @@ namespace MyShoppingCart.Models
         [Required]
         public bool Enabled { get; set; } = true;
 
-        [Required]
+        
         public ApplicationUser applicationUser { get; set; }
 
         public List<ProductImage> productImages { get; set; }
