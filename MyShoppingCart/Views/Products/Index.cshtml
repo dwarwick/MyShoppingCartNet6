@@ -1,12 +1,69 @@
 ﻿@model IEnumerable<Product>
-
+@using MyShoppingCart.Data.ViewModels;
 @{
     ViewData["Title"] = "List of Products";
-
+    EditCategoriesVM productCategoryLookup = ViewBag.productCategoryLookup;
 }
 
-<div class="row">
-    
+<div class="row" >
+    <div class="col-md-2 p-0 overflow-auto">
+        @{
+            int iParentCategory = 0;
+
+						List<ProductCategoryLookup> LevelCategories = productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == iParentCategory).OrderBy(x => x.CategoryName).ToList();
+
+						foreach (ProductCategoryLookup productCategory in LevelCategories)
+						{
+							<ul style="list-style: none; margin: 0px;padding:0px">
+								@{
+									if (DoesSubCategoryExist(productCategory))
+										SubCategoryYes(productCategory);
+									else
+										SubCategoryNo(productCategory);
+								}
+							</ul>
+						}
+
+						string RenderSubcategory(ProductCategoryLookup subCategory)
+						{
+							string ret = "";
+							List<ProductCategoryLookup> SubCategories = productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == subCategory.Id).OrderBy(x => x.CategoryName).ToList();
+
+							foreach (ProductCategoryLookup item in SubCategories)
+							{
+
+								if (DoesSubCategoryExist(item))
+									SubCategoryYes(item);
+								else
+									SubCategoryNo(item);
+							}
+
+							return ret;
+						}
+
+						bool DoesSubCategoryExist(ProductCategoryLookup parentCategory)
+						{
+							return productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == parentCategory.Id).Count() > 0;
+						}
+
+						void SubCategoryYes(ProductCategoryLookup category)
+						{
+
+							<li class='sub-menu' style="background-color:grey;margin:0px" data-sub-id="@category.Id" onclick="AddSubCategory(this);">
+
+								<a style="color:aliceblue"><div class='fa fa-caret-right right'></div>@category.CategoryName</a>
+								<ul style="list-style: none; margin: 0px">
+									@RenderSubcategory(category)
+								</ul>
+							</li>
+						}
+
+						void SubCategoryNo(ProductCategoryLookup category)
+						{
+							<li style="background-color: dimgray; margin: 0px" data-sub-id="@category.Id" onclick="AddSubCategory(this);"><a style="color:aliceblue">@category.CategoryName</a></li>
+						}
+        }
+    </div>
     @foreach (var item in Model)
     {
         <div class="col-md-4 col-xs-10 border-primary mb-3">
@@ -74,3 +131,51 @@
 
 
 @await Html.PartialAsync("_CreateItem", "Products") 
+
+@section Scripts
+{
+<script type="text/javascript">
+
+
+	function AddSubCategory(elem) {
+		event.stopPropagation();
+
+
+		
+		//console.log(jsonData);
+
+		
+		//var Id= $(elem).data('sub-id');
+
+		//console.log(`product: ${jsonData}, Id: ${Id}`)
+
+		//var request;
+		//if (window.XMLHttpRequest) {
+			
+		//	request = new XMLHttpRequest();
+		//}
+
+
+		//if (request != null) {
+		//	var url = `/Products/AddCategoryToProduct?productId=${jsonData}&categoryId=${Id}`;
+		//	request.open("POST", url, false);
+			
+
+		//	request.onreadystatechange = function () {
+		//		if (request.readyState == 4 && request.status == 200) {
+					
+		//			window.location.reload();
+		//		}
+		//	};
+		//	request.send();
+		//}
+
+	}
+
+		$('.sub-menu ul').hide();
+		$(".sub-menu a").click(function () {
+			$(this).parent(".sub-menu").children("ul").slideToggle("100");
+			$(this).find(".right").toggleClass("fa-caret-down fa-caret-right");
+		});
+</script>
+}

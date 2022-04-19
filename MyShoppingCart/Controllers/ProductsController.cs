@@ -53,7 +53,10 @@ namespace MyShoppingCart.Controllers
             string SubDomain = GetSubDomain(HttpContext);
             var allProducts = await _productService.GetAllProductsWithImagesAsync(SubDomain);
 
+            var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();
+
             ViewBag.host = SubDomain;
+            ViewBag.productCategoryLookup = productCategoryLookup;
 
             return View("Index", allProducts);
         }
