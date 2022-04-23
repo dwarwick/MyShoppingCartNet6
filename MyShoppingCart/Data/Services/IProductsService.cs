@@ -13,7 +13,7 @@ namespace MyShoppingCart.Data.Services
     {
         //Task<Movie> GetProductByIdAsync(int id);        
         Task<NewProductVM> AddNewProductAsync(NewProductVM data);
-        Task<List<Product>> GetAllProductsWithImagesAsync(string Subdomain = "");
+        Task<List<Product>> GetAllProductsWithImagesAsync(string Subdomain = "", int category = -1);
         Task<EditProductsVM> GetProductByIdAsync(int Id);
         Task UpdateProductAsync(Product data);
         Task<List<ProductRating>> GetRatingsForProductAsync(int productId);
@@ -26,5 +26,7 @@ namespace MyShoppingCart.Data.Services
         Task<bool> IsCategoryAssociatedWithProductAsync(int categoryId, int productId);
         Task<SelectProductCategoriesVM> AddProductCategoryAsync(int productId, int categoryId);
         Task DeleteCategoryFromProductAsync(int productId, int categoryId);
+        
+        Task <List<Product>> IterateProductCategories(int categoryId);
     }
 }

@@ -61,6 +61,24 @@ namespace MyShoppingCart.Controllers
             return View("Index", allProducts);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetProductsByCategory(List<Product> model, int categoryId = -1)
+        {            
+            ReadCartIDFromCookie();
+
+            string SubDomain = GetSubDomain(HttpContext);
+            var allProducts = await _productService.GetAllProductsWithImagesAsync(SubDomain, categoryId);
+
+            var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();
+
+            ViewBag.host = SubDomain;
+            ViewBag.productCategoryLookup = productCategoryLookup;
+
+            
+            
+            return View("Index", allProducts);
+        }
+
         public async Task<IActionResult> Filter(string searchString)
         {
             var allProducts = await _productService.GetAllProductsWithImagesAsync(GetSubDomain(HttpContext));

@@ -15,6 +15,8 @@ namespace MyShoppingCart.Data.Services
     public class ProductsService : EntityBaseRepository<Product>, IProductsService
     {
         private readonly AppDbContext _context;
+        List<Product> _productDetails;
+        List<Product> _productsInCategory;
         public ProductsService(AppDbContext context) : base(context)
         {
             _context = context;
@@ -79,18 +81,32 @@ namespace MyShoppingCart.Data.Services
             return editCategoriesVM;
         }
 
-        public async Task<List<Product>> GetAllProductsWithImagesAsync(string Subdomain = "")
+        public async Task<List<Product>> GetAllProductsWithImagesAsync(string Subdomain = "", int selectedCategory = -1)
         {
-            List<Product> ProductDetails = null;
+
+            _productDetails = new List<Product>();
+            _productsInCategory = new List<Product>();
+            List<Product> products = new List<Product>();
 
             if (Subdomain == "" || Subdomain == "localhost" || Subdomain.Equals("myshoppingcart.biz", StringComparison.OrdinalIgnoreCase))
-                ProductDetails = await _context.Products
-                    .Include(c => c.productImages).Where(c => c.productImages.Count > 0 && c.Enabled == true).ToListAsync();
+                _productDetails = await _context.Products
+                    .Include(c => c.productImages).Include(p => p.productCategory).Where(c => c.productImages.Count > 0 && c.Enabled == true).ToListAsync();
             else
-                ProductDetails = await _context.Products
-                    .Include(c => c.productImages).Where(c => c.productImages.Count > 0 && c.Enabled == true && (c.applicationUser.Subdomain == Subdomain || c.applicationUser.Domain == Subdomain)).ToListAsync();
+                _productDetails = await _context.Products
+                    .Include(c => c.productImages).Include(p => p.productCategory).Where(c => c.productImages.Count > 0 && c.Enabled == true && (c.applicationUser.Subdomain == Subdomain || c.applicationUser.Domain == Subdomain)).ToListAsync();
 
-            return ProductDetails;
+            
+
+            if (selectedCategory > -1)
+            {// user selected a category
+             // need to select products in that category and all sub categories of that category
+                products = await IterateProductCategories(selectedCategory);
+            }
+
+            if (selectedCategory > -1)
+                return products;
+            else
+                return _productDetails;
         }
 
         public async Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int Id)
@@ -108,9 +124,9 @@ namespace MyShoppingCart.Data.Services
                 .Include(u => u.applicationUser)
                 .FirstOrDefaultAsync(n => n.Id == id),
                 editCategoriesVM = await GetAllProductCategoryLookupAsync()
-        };
+            };
 
-            
+
             return editProductsVM;
         }
 
@@ -165,6 +181,20 @@ namespace MyShoppingCart.Data.Services
             List<ProductCategory> productCategories = await _context.ProductCategories.Where(x => x.ProductCategoryLookupId == categoryId && x.ProductId == productId).ToListAsync();
             _context.ProductCategories.RemoveRange(productCategories);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Product>> IterateProductCategories(int categoryId)
+        {
+            List<ProductCategoryLookup> lstProductCategoryLookup = await _context.ProductCategoryLookups.ToListAsync();
+
+            _productsInCategory.AddRange(_productDetails.Where(x => x.productCategory.Where(x => x.ProductCategoryLookupId == categoryId).Any()).ToList());
+
+            List<ProductCategoryLookup> subCategories = lstProductCategoryLookup.Where(x => x.ParentCategoryId == categoryId).ToList();
+
+            foreach (var productCategory in subCategories)
+                await IterateProductCategories(productCategory.Id);
+
+            return _productsInCategory;
         }
     }
 }

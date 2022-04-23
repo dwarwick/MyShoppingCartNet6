@@ -1,136 +1,149 @@
 ﻿@model IEnumerable<Product>
 @using MyShoppingCart.Data.ViewModels;
 @{
-    ViewData["Title"] = "List of Products";
-    EditCategoriesVM productCategoryLookup = ViewBag.productCategoryLookup;
+	ViewData["Title"] = "List of Products";
+	EditCategoriesVM productCategoryLookup = ViewBag.productCategoryLookup;
 }
 
-<div class="row" >
-    <div class="col-md-2 p-0 overflow-auto">
-        @{
-            int iParentCategory = 0;
+<div class="row">
+	<div class="col-md-2 p-0 overflow-auto">
+		@{
+			int iParentCategory = 0;
 
-						List<ProductCategoryLookup> LevelCategories = productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == iParentCategory).OrderBy(x => x.CategoryName).ToList();
+			List<ProductCategoryLookup> LevelCategories = productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == iParentCategory).OrderBy(x => x.CategoryName).ToList();
 
-						foreach (ProductCategoryLookup productCategory in LevelCategories)
-						{
-							<ul style="list-style: none; margin: 0px;padding:0px">
+			foreach (ProductCategoryLookup productCategory in LevelCategories)
+			{
+				<ul style="list-style: none; margin: 0px;padding:0px">
+					@{
+						if (DoesSubCategoryExist(productCategory))
+							SubCategoryYes(productCategory);
+						else
+							SubCategoryNo(productCategory);
+					}
+				</ul>
+			}
+
+			string RenderSubcategory(ProductCategoryLookup subCategory)
+			{
+				string ret = "";
+				List<ProductCategoryLookup> SubCategories = productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == subCategory.Id).OrderBy(x => x.CategoryName).ToList();
+
+				foreach (ProductCategoryLookup item in SubCategories)
+				{
+
+					if (DoesSubCategoryExist(item))
+						SubCategoryYes(item);
+					else
+						SubCategoryNo(item);
+				}
+
+				return ret;
+			}
+
+			bool DoesSubCategoryExist(ProductCategoryLookup parentCategory)
+			{
+				return productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == parentCategory.Id).Count() > 0;
+			}
+
+			void SubCategoryYes(ProductCategoryLookup category)
+			{
+
+				<li class='sub-menu' style="background-color:grey;margin:0px" data-sub-id="@category.Id" ondblclick="AddSubCategory(this);">
+
+					<a style="color:aliceblue"><div class='fa fa-caret-right right'></div>@category.CategoryName</a>
+					<ul style="list-style: none; margin: 0px">
+						@RenderSubcategory(category)
+					</ul>
+				</li>
+			}
+
+			void SubCategoryNo(ProductCategoryLookup category)
+			{
+				<li style="background-color: dimgray; margin: 0px" data-sub-id="@category.Id" ondblclick="AddSubCategory(this);"><a style="color:aliceblue">@category.CategoryName</a></li>
+			}
+		}
+	</div>
+
+	<div class="col-md-10 col-xs-10 border-primary mb-3 products">
+		<div class="row">
+			@foreach (var item in Model)
+			{
+				<div class="col" style="height:100px">
+					<div class="card mb-3">
+						<div class="row g-0">
+							<div class="col-md-12">
+								<div class="card-header text-white" style="background-color:lightblue">
+									<div class="row" >
+										<div class="col-md-10" >
+											<div class="card-text">
+												<h5 class="card-title float-left">@item.Name</h5>
+											</div>
+										</div>
+										<div class="col" >
+											@{
+												if (User.Identity.IsAuthenticated && User.IsInRole("Seller"))
+												{
+													<a  class="text-white" asp-action="Edit" asp-route-id="@item.Id"><i style="padding-right:0px" class="bi bi-pencil-square" ></i></a>
+												}
+											}
+										</div>
+
+									</div>
+
+									<div class="row">
+										<div class="col-md-4 float-left">
+											<p class="text-dark">@item.Price.ToString("c")</p>
+										</div>
+										<div class="col-md-8  float-right">@await Html.PartialAsync("_DisplayRating", item.Rating)</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6">
 								@{
-									if (DoesSubCategoryExist(productCategory))
-										SubCategoryYes(productCategory);
-									else
-										SubCategoryNo(productCategory);
+									if (@item.productImages.Count > 0)
+									{
+										<img src="@item.productImages[0].ImageURL" style="height:100px" alt="@item.Name" class="rounded-3 m-1">
+									}
+
 								}
-							</ul>
-						}
 
-						string RenderSubcategory(ProductCategoryLookup subCategory)
-						{
-							string ret = "";
-							List<ProductCategoryLookup> SubCategories = productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == subCategory.Id).OrderBy(x => x.CategoryName).ToList();
+							</div>
 
-							foreach (ProductCategoryLookup item in SubCategories)
-							{
+							<div class="col-md-6">
+								<div class="card-body">
+									<p class="card-text">@item.Description</p>
+								</div>
+							</div>
 
-								if (DoesSubCategoryExist(item))
-									SubCategoryYes(item);
-								else
-									SubCategoryNo(item);
-							}
+							<div class="col-md-12">
+								<div class="card-footer ">
 
-							return ret;
-						}
+									<a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">
+										<i class="bi bi-eye-fill"></i> Show Details
+									</a>
 
-						bool DoesSubCategoryExist(ProductCategoryLookup parentCategory)
-						{
-							return productCategoryLookup.lstProductCategoryLookup.Where(x => x.ParentCategoryId == parentCategory.Id).Count() > 0;
-						}
-
-						void SubCategoryYes(ProductCategoryLookup category)
-						{
-
-							<li class='sub-menu' style="background-color:grey;margin:0px" data-sub-id="@category.Id" onclick="AddSubCategory(this);">
-
-								<a style="color:aliceblue"><div class='fa fa-caret-right right'></div>@category.CategoryName</a>
-								<ul style="list-style: none; margin: 0px">
-									@RenderSubcategory(category)
-								</ul>
-							</li>
-						}
-
-						void SubCategoryNo(ProductCategoryLookup category)
-						{
-							<li style="background-color: dimgray; margin: 0px" data-sub-id="@category.Id" onclick="AddSubCategory(this);"><a style="color:aliceblue">@category.CategoryName</a></li>
-						}
-        }
-    </div>
-    @foreach (var item in Model)
-    {
-        <div class="col-md-4 col-xs-10 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white" style="background-color:lightblue">
-                            <div class="row">
-                                <div class="col-md-1 offset-11">
-                                    @{
-                                        if (User.Identity.IsAuthenticated && User.IsInRole("Seller"))
-                                        {<a class="text-white" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>}
-                                    }
-                                </div>
-
-                                <div class="card-text">
-                                    <h5 class="card-title float-left">@item.Name</h5>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col float-left">
-                                    <p class="text-dark">@item.Price.ToString("c")</p>
-                                </div>
-                                <div class="col-md-4  float-right">@await Html.PartialAsync("_DisplayRating", item.Rating)</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        @{
-                            if (@item.productImages.Count > 0)
-                            {<img src="@item.productImages[0].ImageURL" style="width:100%" alt="@item.Name" class="rounded-3 m-1"> }
-
-                        }
-
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <p class="card-text">@item.Description</p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-
-                            <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">
-                                <i class="bi bi-eye-fill"></i> Show Details
-                            </a>
-
-                            <a class="btn btn-success text-white float-right" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
+									<a class="btn btn-success text-white float-right" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
 
 
 
-                        </div>
-                    </div>
+								</div>
+							</div>
 
-                </div>
-            </div>
-        </div>
-    }
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
 </div>
 
 
 
-@await Html.PartialAsync("_CreateItem", "Products") 
+
+
+@await Html.PartialAsync("_CreateItem", "Products")
 
 @section Scripts
 {
@@ -140,35 +153,50 @@
 	function AddSubCategory(elem) {
 		event.stopPropagation();
 
+		var e = document.querySelectorAll(".products");
 
-		
-		//console.log(jsonData);
+		e.forEach(box => {
+			box.remove();
+		});
 
-		
-		//var Id= $(elem).data('sub-id');
 
-		//console.log(`product: ${jsonData}, Id: ${Id}`)
+
+		var Id= $(elem).data('sub-id');
+
+		console.log(`Id: ${Id}`)
 
 		//var request;
 		//if (window.XMLHttpRequest) {
-			
+
 		//	request = new XMLHttpRequest();
 		//}
 
 
 		//if (request != null) {
-		//	var url = `/Products/AddCategoryToProduct?productId=${jsonData}&categoryId=${Id}`;
+		//	var url = `/Products/GetProductsByCategory?categoryId=${Id}`;
 		//	request.open("POST", url, false);
-			
+
 
 		//	request.onreadystatechange = function () {
 		//		if (request.readyState == 4 && request.status == 200) {
-					
-		//			window.location.reload();
+
 		//		}
 		//	};
+
 		//	request.send();
-		//}
+
+		let jsonData = @Html.Raw(Json.Serialize(Model));
+
+		$.ajax({
+		type: "post",
+		url: "/Products/GetProductsByCategory",
+		data: { model: jsonData, Id: categoryId },
+		contentType: 'application/json',
+		cache: false,
+		complete: function (data) {
+		}
+	});
+
 
 	}
 
