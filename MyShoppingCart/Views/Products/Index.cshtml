@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product>
+﻿@*@model IEnumerable<Product>*@
 @using MyShoppingCart.Data.ViewModels;
 @{
 	ViewData["Title"] = "List of Products";
@@ -51,7 +51,7 @@
 
 				<li class='sub-menu' style="background-color:grey;margin:0px" data-sub-id="@category.Id" ondblclick="AddSubCategory(this);">
 
-					<a style="color:aliceblue"><div class='fa fa-caret-right right'></div>@category.CategoryName</a>
+					<a style="color:aliceblue"><i class='fa fa-caret-right right'></i>@category.CategoryName</a>
 					<ul style="list-style: none; margin: 0px">
 						@RenderSubcategory(category)
 					</ul>
@@ -65,78 +65,8 @@
 		}
 	</div>
 
-	<div class="col-md-10 col-xs-10 border-primary mb-3 products">
-		<div class="row">
-			@foreach (var item in Model)
-			{
-				<div class="col" style="height:100px">
-					<div class="card mb-3">
-						<div class="row g-0">
-							<div class="col-md-12">
-								<div class="card-header text-white" style="background-color:lightblue">
-									<div class="row" >
-										<div class="col-md-10" >
-											<div class="card-text">
-												<h5 class="card-title float-left">@item.Name</h5>
-											</div>
-										</div>
-										<div class="col" >
-											@{
-												if (User.Identity.IsAuthenticated && User.IsInRole("Seller"))
-												{
-													<a  class="text-white" asp-action="Edit" asp-route-id="@item.Id"><i style="padding-right:0px" class="bi bi-pencil-square" ></i></a>
-												}
-											}
-										</div>
 
-									</div>
-
-									<div class="row">
-										<div class="col-md-4 float-left">
-											<p class="text-dark">@item.Price.ToString("c")</p>
-										</div>
-										<div class="col-md-8  float-right">@await Html.PartialAsync("_DisplayRating", item.Rating)</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								@{
-									if (@item.productImages.Count > 0)
-									{
-										<img src="@item.productImages[0].ImageURL" style="height:100px" alt="@item.Name" class="rounded-3 m-1">
-									}
-
-								}
-
-							</div>
-
-							<div class="col-md-6">
-								<div class="card-body">
-									<p class="card-text">@item.Description</p>
-								</div>
-							</div>
-
-							<div class="col-md-12">
-								<div class="card-footer ">
-
-									<a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">
-										<i class="bi bi-eye-fill"></i> Show Details
-									</a>
-
-									<a class="btn btn-success text-white float-right" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
-
-
-
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</div>
-			}
-		</div>
-	</div>
+	<div class="col" id="product"></div>
 </div>
 
 
@@ -149,58 +79,22 @@
 {
 <script type="text/javascript">
 
-
 	function AddSubCategory(elem) {
 		event.stopPropagation();
+		
+		//get the id
+		var categoryId= $(elem).data('sub-id');
 
-		var e = document.querySelectorAll(".products");
+		console.log(`Id: ${categoryId}`);
 
-		e.forEach(box => {
-			box.remove();
-		});
-
-
-
-		var Id= $(elem).data('sub-id');
-
-		console.log(`Id: ${Id}`)
-
-		//var request;
-		//if (window.XMLHttpRequest) {
-
-		//	request = new XMLHttpRequest();
-		//}
-
-
-		//if (request != null) {
-		//	var url = `/Products/GetProductsByCategory?categoryId=${Id}`;
-		//	request.open("POST", url, false);
-
-
-		//	request.onreadystatechange = function () {
-		//		if (request.readyState == 4 && request.status == 200) {
-
-		//		}
-		//	};
-
-		//	request.send();
-
-		let jsonData = @Html.Raw(Json.Serialize(Model));
-
-		$.ajax({
-		type: "post",
-		url: "/Products/GetProductsByCategory",
-		data: { model: jsonData, Id: categoryId },
-		contentType: 'application/json',
-		cache: false,
-		complete: function (data) {
-		}
-	});
-
+		//call controller Products, controller action GetProductsByCategory?categoryId and pass the categoryId
+		//The partial view will be returned and load onto the div id #product
+		$('#product').load(`/Products/GetProductsByCategory?categoryId=${categoryId}`);
 
 	}
 
 		$('.sub-menu ul').hide();
+		$('#product').load(`/Products/GetProductsByCategory`);//when the index view first loads, load all products (i.e. category -1)
 		$(".sub-menu a").click(function () {
 			$(this).parent(".sub-menu").children("ul").slideToggle("100");
 			$(this).find(".right").toggleClass("fa-caret-down fa-caret-right");

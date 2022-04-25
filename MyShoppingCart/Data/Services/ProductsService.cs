@@ -101,6 +101,7 @@ namespace MyShoppingCart.Data.Services
             {// user selected a category
              // need to select products in that category and all sub categories of that category
                 products = await IterateProductCategories(selectedCategory);
+                products = products.Distinct().ToList();
             }
 
             if (selectedCategory > -1)

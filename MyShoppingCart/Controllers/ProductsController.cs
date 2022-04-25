@@ -51,32 +51,31 @@ namespace MyShoppingCart.Controllers
             ReadCartIDFromCookie();
 
             string SubDomain = GetSubDomain(HttpContext);
-            var allProducts = await _productService.GetAllProductsWithImagesAsync(SubDomain);
+            //var allProducts = await _productService.GetAllProductsWithImagesAsync(SubDomain);
 
             var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();
 
             ViewBag.host = SubDomain;
             ViewBag.productCategoryLookup = productCategoryLookup;
 
-            return View("Index", allProducts);
+            return View("Index");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetProductsByCategory(List<Product> model, int categoryId = -1)
+        public async Task<IActionResult> GetProductsByCategory(int categoryId = -1)
         {            
-            ReadCartIDFromCookie();
+            //ReadCartIDFromCookie();
 
             string SubDomain = GetSubDomain(HttpContext);
             var allProducts = await _productService.GetAllProductsWithImagesAsync(SubDomain, categoryId);
 
-            var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();
+            //var productCategoryLookup = await _productService.GetAllProductCategoryLookupAsync();
 
-            ViewBag.host = SubDomain;
-            ViewBag.productCategoryLookup = productCategoryLookup;
+            //ViewBag.host = SubDomain;
+            //ViewBag.productCategoryLookup = productCategoryLookup;
 
             
             
-            return View("Index", allProducts);
+            return PartialView("_Products", allProducts);
         }
 
         public async Task<IActionResult> Filter(string searchString)

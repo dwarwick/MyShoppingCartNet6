@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Product>
+
+<div class="col-md-10 col-xs-10 border-primary mb-3 products">
+		<div class="row">
+			@foreach (var item in Model)
+			{
+				<div class="col" style="height:100px">
+					<div class="card mb-3">
+						<div class="row g-0">
+							<div class="col-md-12">
+								<div class="card-header text-white" style="background-color:lightblue">
+									<div class="row" >
+										<div class="col-md-10" >
+											<div class="card-text">
+												<h5 class="card-title float-left">@item.Name</h5>
+											</div>
+										</div>
+										<div class="col" >
+											@{
+												if (User.Identity.IsAuthenticated && User.IsInRole("Seller"))
+												{
+													<a  class="text-white" asp-action="Edit" asp-route-id="@item.Id"><i style="padding-right:0px" class="bi bi-pencil-square" ></i></a>
+												}
+											}
+										</div>
+
+									</div>
+
+									<div class="row">
+										<div class="col-md-4 float-left">
+											<p class="text-dark">@item.Price.ToString("c")</p>
+										</div>
+										<div class="col-md-8  float-right">@await Html.PartialAsync("_DisplayRating", item.Rating)</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								@{
+									if (@item.productImages.Count > 0)
+									{
+										<img src="@item.productImages[0].ImageURL" style="height:100px" alt="@item.Name" class="rounded-3 m-1">
+									}
+
+								}
+
+							</div>
+
+							<div class="col-md-6">
+								<div class="card-body">
+									<p class="card-text">@item.Description</p>
+								</div>
+							</div>
+
+							<div class="col-md-12">
+								<div class="card-footer ">
+
+									<a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">
+										<i class="bi bi-eye-fill"></i> Show Details
+									</a>
+
+									<a class="btn btn-success text-white float-right" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
