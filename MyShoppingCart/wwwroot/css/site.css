@@ -70,3 +70,15 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.site-background-blue {
+    background-color: #5691CC;
+}
+
+.site-link-text{
+    color:floralwhite;
+    
+}
+.site-link-text a:link{
+    color:floralwhite;
+}
