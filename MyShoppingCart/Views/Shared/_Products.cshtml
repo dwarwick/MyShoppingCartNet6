@@ -8,11 +8,11 @@
 				<div class="card mb-3">
 					<div class="row g-0">
 						<div class="col-md-12">
-							<div class="card-header text-white site-background-blue" >
+							<div class="card-header text-white site-background-blue">
 								<div class="row">
-									<div class="col-md-10">
+									<div class="col-lg-10">
 										<div class="card-text">
-											<h5 class="card-title float-left">@item.Name</h5>
+											<h5 class="card-title float-left text-nowrap">@item.Name</h5>
 										</div>
 									</div>
 									<div class="col">
@@ -28,9 +28,9 @@
 
 								<div class="row">
 									<div class="col-md-4 float-left">
-										<p class="text-dark">@item.Price.ToString("c")</p>
+										<p class="text-dark text-nowrap">@item.Price.ToString("c")</p>
 									</div>
-									<div class="col-md-8  float-right">@await Html.PartialAsync("_DisplayRating", item.Rating)</div>
+									<div class="col-md-8 float-right text-nowrap">@await Html.PartialAsync("_DisplayRating", item.Rating)</div>
 								</div>
 							</div>
 						</div>
@@ -54,13 +54,23 @@
 							</div>
 						</div>
 						<div class="card-footer">
-							<div class="mb-0" style="height:40px">
-							<a class="btn btn-outline-primary m-1" asp-action="Details" asp-route-id="@item.Id">
-								<i class="bi bi-eye-fill"></i> Show Details
-							</a>
+							
+							<div class="mb-0 d-none d-xl-block" style="height:40px">
+								<a class="btn btn-outline-primary m-1" asp-action="Details" asp-route-id="@item.Id">
+									<i class="bi bi-eye-fill"></i> Details
+								</a>
 
-							<a class="btn btn-success text-white float-right m-1" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
+								<a class="btn btn-success text-white float-right m-1" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
 							</div>
+
+							<div class="mb-0 d-xl-none" style="height:90px">
+								<a class="btn btn-outline-primary m-1" asp-action="Details" asp-route-id="@item.Id">
+									<i class="bi bi-eye-fill"></i> Details
+								</a>
+
+								<a class="btn btn-success text-white float-right m-1" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
+							</div>
+
 						</div>
 					</div>
 				</div>
