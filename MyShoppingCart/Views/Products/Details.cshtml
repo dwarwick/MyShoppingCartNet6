@@ -20,11 +20,11 @@
 
 							<div class="col" id="left_half">
 								<div class="row" id="top_left">
-									<p class="card-text m-0"><h5 class="cardtitle">@product.productModel.Name</h5></p>
+									<p class="card-text m-0"><h5 class="cardtitle text-nowrap">@product.productModel.Name</h5></p>
 								</div>
 
 								<div class="row " id="bottom_left">
-									<div class="col mt-0" id="stars_col">
+									<div class="col mt-0 text-nowrap" id="stars_col">
 										@await Html.PartialAsync("_DisplayRating", product.productModel.Rating)
 									</div>
 									<div class="col mt-0" id="rating_col">
@@ -33,16 +33,19 @@
 								</div>
 							</div>
 
-							<div class="col" id="right_half" >
-								<div class="row" id="top_right" >
-									<div class="col text-end" >
+							<div class="col" id="right_half">
+								<div class="row" id="top_right">
+									<div class="col text-end mb-4">
 										@*@string.Format("Number of Reviews: {0}", product.productModel.NumberOfReviews)*@
 										Number of Reviews: @product.productModel.NumberOfReviews
 									</div>
 
 								</div>
 								<div class="row" id="bottom_right">
-									<span class="text-end"> <a class="site-link-text" asp-action="WriteReview" asp-route-productId="@product.productModel.Id"><i class="bi bi-pencil ml-2 "> Write Review</i></a> </span>
+									<div class="col text-end" >
+										<span> <a class="site-link-text" asp-action="WriteReview" asp-route-productId="@product.productModel.Id"><i class="bi bi-pencil"> Write Review</i></a> </span>
+									</div>
+
 								</div>
 							</div>
 						</div>
