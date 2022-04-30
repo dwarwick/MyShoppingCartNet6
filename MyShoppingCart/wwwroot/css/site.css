@@ -59,9 +59,10 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-  height:100%;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    height: 100%;
+    background-color:lavender;
 }
 .footer {
   position: absolute;
@@ -81,4 +82,8 @@ body {
 }
 .site-link-text a:link{
     color:floralwhite;
+}
+
+.linear-gradient {
+    background: linear-gradient(to top,blue , white);
 }

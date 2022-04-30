@@ -4,7 +4,7 @@
 	<div class="row">
 		@foreach (var item in Model)
 		{
-			<div class="col-md-4 d-flex align-items-stretch">
+			<div class="col-md-3 d-flex align-items-stretch" style="width:310px">
 				<div class="card mb-3">
 					<div class="row g-0">
 						<div class="col-md-12">
@@ -28,42 +28,44 @@
 
 								<div class="row">
 									<div class="col-md-4 float-left">
-										<p class="text-dark text-nowrap">@item.Price.ToString("c")</p>
+										<p class="card-text text-nowrap">@item.Price.ToString("c")</p>
 									</div>
 									<div class="col-md-8 float-right text-nowrap">@await Html.PartialAsync("_DisplayRating", item.Rating)</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="card-body">
-							<div class="row h-100">
-								<div class="col-md-7 m-0">
-									@{
-										if (@item.productImages.Count > 0)
-										{
-											<img src="@item.productImages[0].ImageURL" alt="@item.Name" class="rounded-3 m-0 img-fluid">
+						<div class="card-body linear-gradient" >
+							<div class="row" >
+								
+									<div class="col-md-7 m-0">
+										@{
+											if (@item.productImages.Count > 0)
+											{
+												<img src="@item.productImages[0].ImageURL" alt="@item.Name" class="rounded-3 m-0 img-fluid h-75">
+											}
+
 										}
 
-									}
+									</div>
 
-								</div>
-
-								<div class="col" style="overflow-y:auto;height:255px">
-									<p class="card-text">@item.Description</p>
-								</div>
+									<div class="col " style="overflow-y:auto;height:255px">
+										<p class="card-text">@item.Description</p>
+									</div>
+								
 							</div>
 						</div>
 						<div class="card-footer">
-							
-							<div class="mb-0 d-none d-xl-block" style="height:40px">
-								<a class="btn btn-outline-primary m-1" asp-action="Details" asp-route-id="@item.Id">
+
+							<div class="d-none d-xl-block p-1" >
+								<a class="btn btn-outline-primary m-0" asp-action="Details" asp-route-id="@item.Id">
 									<i class="bi bi-eye-fill"></i> Details
 								</a>
 
-								<a class="btn btn-success text-white float-right m-1" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
+								<a class="btn btn-success text-white float-right m-0" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i> Add to Cart</a>
 							</div>
 
-							<div class="mb-0 d-xl-none" style="height:90px">
+							<div class="d-xl-none p-1" >
 								<a class="btn btn-outline-primary m-1" asp-action="Details" asp-route-id="@item.Id">
 									<i class="bi bi-eye-fill"></i> Details
 								</a>

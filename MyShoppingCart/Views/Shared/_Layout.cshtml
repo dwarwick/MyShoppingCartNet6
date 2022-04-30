@@ -24,8 +24,8 @@
 <body>
     <header>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid col-md-8">
+        <nav class="navbar navbar-expand-lg " style="background-color:lavender">
+            <div class="container-fluid col">
                 <a class="navbar-brand" asp-controller="Products" asp-action="Index">
                     <img src="@(Configuration.GetValue<string>("StorageContainerURL"))/site-files/store-logo.png"
                          class="img-fluid" style="max-height:75px;width:auto" alt="Alternate Text" />
@@ -91,7 +91,7 @@
         </nav>
 
     </header>
-    <div class="container">
+    <div >
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
 
