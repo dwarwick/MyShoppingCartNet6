@@ -51,8 +51,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-8" style="max-height:400px">
-					<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" style="max-width:400px">
+				<div class="col-md-8 site-slideshow-background" style="max-height:400px">
+					<div id="carouselExampleCaptions" class="carousel slide mx-auto" data-bs-ride="carousel" style="max-width:400px">
 						<div class="carousel-indicators">
 							<button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
 							@foreach (var item in productImages)
@@ -72,8 +72,8 @@
 								i++;
 								var active = i == 1 ? "active" : "";
 
-								<div class="carousel-item  @active">
-									<img src="@item.ImageURL" class="d-block w-100 rounded-3 img-fluid" alt="@product.productModel.Name" style="max-height:350px">
+								<div class="carousel-item @active">
+									<img src="@item.ImageURL" class="d-block  rounded-3 img-fluid mx-auto" alt="@product.productModel.Name" style="max-height:350px">
 									<div class="carousel-caption d-none d-md-block">
 										<h5>@item.ImageDescription</h5>
 									</div>
@@ -92,7 +92,7 @@
 					</div>
 					@*<img src="@Model.productImages[0].ImageURL" width="100%" alt="@Model.Name">*@
 				</div>
-				<div class="col-md-4" style="background-color:whitesmoke">
+				<div class="col-md-4 linear-gradient" >
 					<div class="card-body" style="overflow-y:auto;height:255px">
 						<p class="card-text">@product.productModel.Description</p>
 
