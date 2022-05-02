@@ -21,7 +21,7 @@
 
 			<div class="col-md-12">
 
-				<form asp-action="Edit" class="p-1 border border-dark rounded">
+				<form asp-action="Edit" class="p-1 mb-1 border border-dark rounded">
 
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -112,7 +112,7 @@
 			</div>
 		</div>
 		<div class="col">
-			<a class="btn btn-outline-secondary p-1" asp-action="SelectProductCategories" asp-route-productId="@Model.productModel.Id">Select Product Categories</a>
+			<a class="btn btn-outline-secondary p-1 mx-1" asp-action="SelectProductCategories" asp-route-productId="@Model.productModel.Id">Select Product Categories</a>
 		</div>
 	</div>
 </div>
