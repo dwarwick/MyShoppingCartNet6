@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyShoppingCart.Data;
 
@@ -11,9 +12,10 @@ using MyShoppingCart.Data;
 namespace MyShoppingCart.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220531002815_AddContainerTable")]
+    partial class AddContainerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -413,14 +415,14 @@ namespace MyShoppingCart.Migrations
                     b.Property<string>("applicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("height")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("height")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("length")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("length")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("width")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("width")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -582,29 +584,6 @@ namespace MyShoppingCart.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ShippingClasses");
-                });
-
-            modelBuilder.Entity("MyShoppingCart.Models.ShippingMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("applicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("containerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("applicationUserId");
-
-                    b.HasIndex("containerId");
-
-                    b.ToTable("ShippingMethods");
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShippingPolicy", b =>
@@ -810,21 +789,6 @@ namespace MyShoppingCart.Migrations
                     b.Navigation("applicationUser");
 
                     b.Navigation("product");
-                });
-
-            modelBuilder.Entity("MyShoppingCart.Models.ShippingMethod", b =>
-                {
-                    b.HasOne("MyShoppingCart.Models.ApplicationUser", "applicationUser")
-                        .WithMany()
-                        .HasForeignKey("applicationUserId");
-
-                    b.HasOne("MyShoppingCart.Models.Container", "container")
-                        .WithMany()
-                        .HasForeignKey("containerId");
-
-                    b.Navigation("applicationUser");
-
-                    b.Navigation("container");
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShippingPolicy", b =>

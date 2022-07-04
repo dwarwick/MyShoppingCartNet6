@@ -1,0 +1,24 @@
+﻿@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	ViewData["Title"] = "Edit Store Shipping Policy";
+}
+
+<div class="row">
+	<div class="col-md-8 offset-2">
+		<h4>Edit Your Seller Account</h4>
+
+		@if (TempData["Error"] != null)
+		{
+			<div class="col-md-12 alert alert-danger">
+				<span><b>Sorry!</b> - @TempData["Error"] </span>
+			</div>
+		}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-8 offset-2">
+		<a class="btn btn-primary" asp-controller="Account" asp-action="EditShippingPolicy">Flat Rate $10</a>
+	</div>
+</div>

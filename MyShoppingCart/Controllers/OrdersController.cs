@@ -15,7 +15,7 @@ using MyShoppingCart.Helpers;
 using PayPalCheckoutSdk.Core;
 using PayPalCheckoutSdk.Orders;
 using PayPalHttp;
-
+using MyShoppingCart.Helpers.Paypal;
 
 namespace MyShoppingCart.Controllers
 {
@@ -137,13 +137,13 @@ namespace MyShoppingCart.Controllers
                 string imgSource = $"{_configuration.GetValue<string>("StorageContainerURL")}/site-files/store-logo.png";
 
                 string sHTMLContent = $"<img src='{imgSource}' style='max-height:75px;width:auto' alt='store logo' />";
-                sHTMLContent += $"<h3>Congratulations {seller.FullName}!</h3>";
+                sHTMLContent += $"<br><br><h3>Congratulations {seller.FullName}!</h3>";
                 sHTMLContent += $"<strong>{items[0].applicationUser.FullName} just placed an order! Here is the address and contact details:</strong><br><br>";
                 sHTMLContent += $"Order Number: {order.Id}<br><br>";
                 sHTMLContent += $"Order Date: {order.OrderDate.ToLocalTime().ToShortDateString()}<br>";
                 sHTMLContent += $"<p>Email: {items[0].applicationUser.Email}<br>";
                 sHTMLContent += $"Phone: {items[0].applicationUser.PhoneNumber}<br><br>";
-                sHTMLContent += $"Addrrss1: {items[0].applicationUser.Address1}<br>";
+                sHTMLContent += $"Address1: {items[0].applicationUser.Address1}<br>";
                 sHTMLContent += $"Address2: {items[0].applicationUser.Address2}<br>";
                 sHTMLContent += $"City: {items[0].applicationUser.City}<br>";
                 sHTMLContent += $"State: {items[0].applicationUser.State}<br>";
@@ -197,16 +197,16 @@ namespace MyShoppingCart.Controllers
             List<ApplicationUser> Sellers = GetListOfShoppingCartSellers(shoppingCartItems).Distinct().ToList();
 
 
-            string imgSource = $"{_configuration.GetValue<string>("StorageContainerURL")}/store-logo.png";
+            string imgSource = $"{_configuration.GetValue<string>("StorageContainerURL")}/site-files/store-logo.png";
 
             string sHTMLContent = $"<img src='{imgSource}' style='max-height:75px;width:auto' alt='store logo' />";
 
-            sHTMLContent += $"<strong>{shoppingCartItems[0].applicationUser.FullName}, thank you for placing an order with us! Here are the order details:</strong><br><br>";
+            sHTMLContent += $"<br><br><strong>{shoppingCartItems[0].applicationUser.FullName}, thank you for placing an order with us! Here are the order details:</strong><br><br>";
             sHTMLContent += $"Order Number: {order.Id}<br><br>";
             sHTMLContent += $"Order Date: {order.OrderDate.ToLocalTime().ToShortDateString()}<br>";
 
             sHTMLContent += $"Shipping Address<br><br>";
-            sHTMLContent += $"Addrrss1: {shoppingCartItems[0].applicationUser.Address1}<br>";
+            sHTMLContent += $"Address1: {shoppingCartItems[0].applicationUser.Address1}<br>";
             sHTMLContent += $"Address2: {shoppingCartItems[0].applicationUser.Address2}<br>";
             sHTMLContent += $"City: {shoppingCartItems[0].applicationUser.City}<br>";
             sHTMLContent += $"State: {shoppingCartItems[0].applicationUser.State}<br>";
@@ -234,9 +234,11 @@ namespace MyShoppingCart.Controllers
 
             foreach (ShoppingCartItem item in shoppingCartItems)
             {
+                string productImgSource = item.Product.productImages[0].ImageURL;
+
                 sHTMLContent += "<tr>";
 
-                sHTMLContent += $"<img src='{item.Product.productImages[0].ImageURL}' style='max-height:75px;width:auto' alt='{item.Product.productImages[0].ImageDescription}' />";
+                sHTMLContent += $"<td><img src='{productImgSource}' style='max-height:75px;width:auto' alt='{item.Product.productImages[0].ImageDescription}' /></td>";
                 sHTMLContent += $"<td style=';border: 1px solid black;'>{item.Product.applicationUser.Email}</td>";
                 sHTMLContent += $"<td style=';border: 1px solid black;'>{item.Amount}</td>";
                 sHTMLContent += $"<td style=';border: 1px solid black;'>{item.Product.Name}</td>";
@@ -310,6 +312,108 @@ namespace MyShoppingCart.Controllers
             string sHTMLContent = $"<strong>Please click the following link to verify your email:</strong><br>{sURL}";
 
             await SendGridStatic.Execute(_configuration.GetValue<string>("SendGridKey"), "customerservice@myshoppingcart.biz", "Customer Service", "Please Verify Your Account", user.Email, user.FullName, sPlainTextContent, sHTMLContent);
+        }
+
+
+
+
+        /// <summary>
+        /// This action is called when the user clicks on the PayPal button.
+        /// </summary>
+        /// <returns></returns>
+        [Route("Orders/create")]
+        public async Task<SmartButtonHttpResponse> Create()
+        {
+            var items = _shoppingCart.GetShoppingCartItems();
+            _shoppingCart.ShoppingCartItems = items;
+
+            var cartVM = new ShoppingCartVM()
+            {
+                ShoppingCart = _shoppingCart,
+                ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal(),
+                ShippingMethods = _shoppingCart.GetContainers(items)
+            };
+
+            var request = new OrdersCreateRequest();
+
+            request.Prefer("return=representation");
+            request.RequestBody(await OrderBuilder.Build(cartVM));
+
+            // Call PayPal to set up a transaction
+            var response = await PayPalClient.Client().Execute(request);
+
+            // Create a response, with an order id.
+            var result = response.Result<PayPalCheckoutSdk.Orders.Order>();
+            var payPalHttpResponse = new SmartButtonHttpResponse(response)
+            {
+                orderID = result.Id
+            };
+
+            
+
+            return payPalHttpResponse;
+        }
+
+        /// <summary>
+        /// This action is called once the PayPal transaction is approved
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [Route("Orders/approved/{orderId}")]
+        public IActionResult Approved(string orderId)
+        {
+            return Ok();
+        }
+
+        /// <summary>
+        /// This action is called once the PayPal transaction is complete
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [Route("Orders/complete/{orderId}")]
+        public async Task<IActionResult> Complete(string orderId)
+        {
+            // 1. Update the database.
+            // 2. Complete the order process. Create and send invoices etc.
+            // 3. Complete the shipping process.
+
+            var items = _shoppingCart.GetShoppingCartItems();
+            Models.Order order = await _ordersService.StoreOrderAsync(items);
+
+            PrepareSellerEmail(items, order, "You Have a New Order!");
+            PrepareBuyerEmail(items, order, "Thank You for Your Order!");
+            await _shoppingCart.ClearShoppingCartAsync(_serviceProvider);
+            DeleteCartIDCookie();
+
+            return View("OrderCompleted");
+
+            //return Ok();
+        }
+
+        /// <summary>
+        /// This action is called once the PayPal transaction is complete
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [Route("Orders/cancel/{orderId}")]
+        public IActionResult Cancel(string orderId)
+        {
+            // 1. Remove the orderId from the database.
+            return Ok();
+        }
+
+        /// <summary>
+        /// This action is called once the PayPal transaction is complete
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [Route("Orders/error/{orderId}/{error}")]
+        public IActionResult Error(string orderId,
+                                   string error)
+        {
+            // Log the error.
+            // Notify the user.
+            return NoContent();
         }
     }
 }

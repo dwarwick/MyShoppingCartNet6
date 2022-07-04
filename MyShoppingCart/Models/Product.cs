@@ -33,5 +33,15 @@ namespace MyShoppingCart.Models
         public int NumberOfReviews { get; set; } = 0;
 
         public IList<ProductCategory> productCategory { get; set; }
+        
+        [Range(1, int.MaxValue, ErrorMessage = "Length must be at least 1 inch")]
+        public decimal length { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "width must be at least 1 inch")]
+        public decimal width { get; set; }
+        
+        [Range(1, int.MaxValue, ErrorMessage = "height must be at least 1 inch")]
+        public decimal height { get; set; }
+        
     }
 }

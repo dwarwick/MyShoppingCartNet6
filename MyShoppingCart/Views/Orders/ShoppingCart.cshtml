@@ -121,63 +121,151 @@
 <script src="https://www.paypal.com/sdk/js?client-id=ARkt6Jy1b8O_wyFiYp2SqJipStPd1BTyNvbtEdi-zi-hYQQgEcwY9f8xzLjheAerXsZPbpJos3NYCnWj&currency=USD"></script>
 <script>
 
-	  $(document).ready(function () {
-		  let _total = @Html.Raw(Model.ShoppingCartTotal);
+	//  $(document).ready(function () {
+	//	  let _total = @Html.Raw(Model.ShoppingCartTotal);
 
-	  paypal.Buttons
-	  (
-		  {
-		  // Sets up the transaction when a payment button is clicked
-			  createOrder: (data, actions) => {
-      return actions.order.create({
-         "purchase_units": [{
-            "amount": {
-              "currency_code": "USD",
-              "value": "100",
-              "breakdown": {
-                "item_total": {  /* Required when including the `items` array */
-                  "currency_code": "USD",
-                  "value": "100"
-                }
-              }
-            },
-            "items": [
-              {
-                "name": "First Product Name", /* Shows within upper-right dropdown during payment approval */
-                "description": "Optional descriptive text..", /* Item details will also be in the completed paypal.com transaction view */
-                "unit_amount": {
-                  "currency_code": "USD",
-                  "value": "50"
-                },
-                "quantity": "2"
-              },
-            ]
-          }]
-      });
-    },
-	  // Finalize the transaction after payer approval
-	  onApprove: (data, actions) =>
-	  {
-		return actions.order.capture().then
-		(function(orderData)
-			{
-			  // Successful capture! For dev/demo purposes:
-			  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-			  const transaction = orderData.purchase_units[0].payments.captures[0];
-			  alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+	//  paypal.Buttons
+	//  (
+	//	  {
+	//	  // Sets up the transaction when a payment button is clicked
+	//		  createOrder: (data, actions) => {
+	//  return actions.order.create({
+	//	 "purchase_units": [{
+	//		"amount": {
+	//		  "currency_code": "USD",
+	//		  "value": "104.98",
+	//		  "breakdown": {
+	//			"item_total": {  /* Required when including the `items` array */
+	//			  "currency_code": "USD",
+	//			  "value": "100"
+	//			},
+	//			"tax_total": {  /* Required when including the `items` array */
+	//			  "currency_code": "USD",
+	//			  "value": "4.98"
+	//			}
+	//		  }
+	//		},
+	//			shipping: {
+	//				options: [
+	//					{
+	//						id: "SHIP_123",
+	//						label: "Free Shipping",
+	//						type: "SHIPPING",
+	//						selected: true,
+	//						amount: {
+	//							value: "3.00",
+	//							currency_code: "USD"
+	//						}
+	//					},
+	//					{
+	//						id: "SHIP_456",
+	//						label: "Pick up in Store",
+	//						type: "PICKUP",
+	//						selected: false,
+	//						amount: {
+	//							value: "0.00",
+	//							currency_code: "USD"
+	//						}
+	//					}
+	//				]
+	//			},
+	//		"items": [
+	//		  {
+	//			"name": "First Product Name", /* Shows within upper-right dropdown during payment approval */
+	//			"description": "Optional descriptive text..", /* Item details will also be in the completed paypal.com transaction view */
+	//			"unit_amount": {
+	//			  "currency_code": "USD",
+	//			  "value": "50"
+	//			},
+	//			"quantity": "2",
+	//			"tax": {
+	//				"value":"2.49",
+	//			"currency_code": "USD"
+	//			}
+	//		  },
+	//		]
+	//	  }]
+	//  });
+	//},
+	//  // Finalize the transaction after payer approval
+	//  onApprove: (data, actions) =>
+	//  {
+	//	return actions.order.capture().then
+	//	(function(orderData)
+	//		{
+	//		  // Successful capture! For dev/demo purposes:
+	//		  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+	//		  const transaction = orderData.purchase_units[0].payments.captures[0];
+	//		  alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
 
+	//		  var orderJson = JSON.stringify(orderData, null, 2);
 
-			  // When ready to go live, remove the alert and show a success message within this page. For example:
-			  // const element = document.getElementById('paypal-button-container');
-			  // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-			  // Or go to another URL:  actions.redirect('thank_you.html');
-			}
-		);
-	  }
-	}).render('#paypal-btn');
-		  });
+	//		  var url = '@Url.Action("CompleteOrder", "Orders", new { })';
+	//			window.location.href = url;
 
+	//			console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+	//		  // When ready to go live, remove the alert and show a success message within this page. For example:
+	//		  // const element = document.getElementById('paypal-button-container');
+	//		  // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+	//		  // Or go to another URL:  actions.redirect('thank_you.html');
+	//		}
+	//	);
+	//  }
+	//}).render('#paypal-btn');
+	//	  });
 
+	// This is stored just in case the user cancels the other 
+    // or there is an error in the other process.
+    var orderId;
+    // Render the PayPal smart button into #paypal-button-container
+    paypal.Buttons({
+
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            orderId = data.orderID;
+            return fetch('/Orders/create/', {
+                method: 'post'
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                return data.orderID;
+            });
+        },
+
+        // Finalise the transaction
+        onApprove: function (data, actions) {
+            return fetch('/Orders/approved/' + data.orderID, {
+                method: 'post'
+            }).then(function (res) {
+                return actions.order.capture();
+            }).then(function (details) {
+
+                // (Preferred) Notify the server that the transaction id complete 
+                // and have an option to display an order completed screen.
+                window.location.replace('/Orders/complete/' + 
+                                         data.orderID + '/@ViewBag.CurrencyCode');
+                
+                // OR
+                // Notify the server that the transaction id complete
+                //httpGet('/api/paypal/checkout/order/complete/' + data.orderID);
+
+                // Show a success message to the buyer
+                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            });
+        },
+
+        // Buyer cancelled the payment
+        onCancel: function (data, actions) {
+            httpGet('/Orders/cancel/' + data.orderID);
+        },
+
+        // An error occurred during the transaction
+        onError: function (err) {
+            httpGet('/Orders/error/' + orderId + '/' + 
+                     encodeURIComponent(err));
+        }
+
+    }).render('#paypal-btn');
 
 </script>
 

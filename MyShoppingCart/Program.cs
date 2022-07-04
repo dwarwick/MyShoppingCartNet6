@@ -47,11 +47,6 @@ namespace MyShoppingCart
                 restrictedToMinimumLevel: LogEventLevel.Information)
                 .CreateLogger();
 
-            
-            
-
-
-
             try
             {
                 Log.Information("Application is starting.");
@@ -70,8 +65,6 @@ namespace MyShoppingCart
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>().UseAzureAppServices();
-                });  
-        
-        
+                }); 
     }    
 }

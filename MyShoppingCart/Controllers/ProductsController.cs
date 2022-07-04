@@ -239,7 +239,7 @@ namespace MyShoppingCart.Controllers
                         ProductImage productImage = new ProductImage
                         {
                             ProductId = Id,
-                            ImageURL = $"{_Configuration.GetValue<string>("StorageContainerURL")}/{user.Id}/{iFormFile.FileName}"
+                            ImageURL = $"{_Configuration.GetValue<string>("StorageContainerURL")}/{user.Id}/{iFormFile.FileName.Trim().Replace(' ','_')}"
                         };
 
                         await _imageService.AddNewImageAsync(productImage);

@@ -399,8 +399,14 @@ namespace MyShoppingCart.Controllers
             await Logout();
 
             return RedirectToAction("Index", "Products");
+        }
 
+        [Authorize(Roles = "Seller")]
+        public async Task<IActionResult> EditShippingPolicy()
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(User);
 
+            return View();
         }
     }
 }

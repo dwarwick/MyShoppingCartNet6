@@ -29,5 +29,9 @@ namespace MyShoppingCart.Data
         public DbSet<Payout> Payouts { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductCategoryLookup> ProductCategoryLookups { get; set; }
+        public DbSet<ShippingPolicy> ShippingPolicies { get; set; }
+        public DbSet<ShippingClass> ShippingClasses { get; set; }
+        public DbSet<Container> containers { get;set; }
+        public DbSet<ShippingMethod> ShippingMethods { get; set; }
     }
 }

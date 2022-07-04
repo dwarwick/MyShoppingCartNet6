@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyShoppingCart.Data;
 
@@ -11,9 +12,10 @@ using MyShoppingCart.Data;
 namespace MyShoppingCart.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220508025141_ShippingPolicy")]
+    partial class ShippingPolicy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -259,36 +261,6 @@ namespace MyShoppingCart.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("MyShoppingCart.Models.Container", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<decimal>("HeightInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("LengthInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("WidthInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("shippingClassId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("shippingClassId");
-
-                    b.ToTable("containers");
-                });
-
             modelBuilder.Entity("MyShoppingCart.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -413,15 +385,6 @@ namespace MyShoppingCart.Migrations
                     b.Property<string>("applicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("height")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("length")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("width")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("applicationUserId");
@@ -540,71 +503,12 @@ namespace MyShoppingCart.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("DeliveryTimeline")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("MaxCombinedLengthAndGirth")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MaxHeightInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MaxLengthInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MaxWeightOz")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MaxWidthInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinHeightInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinLengthInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinMachinableHeightInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinMachinableLengthInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinMachinableWidthInch")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinWidthInch")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ShippingClasses");
-                });
-
-            modelBuilder.Entity("MyShoppingCart.Models.ShippingMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("applicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("containerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("applicationUserId");
-
-                    b.HasIndex("containerId");
-
-                    b.ToTable("ShippingMethods");
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShippingPolicy", b =>
@@ -713,15 +617,6 @@ namespace MyShoppingCart.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyShoppingCart.Models.Container", b =>
-                {
-                    b.HasOne("MyShoppingCart.Models.ShippingClass", "shippingClass")
-                        .WithMany()
-                        .HasForeignKey("shippingClassId");
-
-                    b.Navigation("shippingClass");
-                });
-
             modelBuilder.Entity("MyShoppingCart.Models.OrderItem", b =>
                 {
                     b.HasOne("MyShoppingCart.Models.Order", "Order")
@@ -810,21 +705,6 @@ namespace MyShoppingCart.Migrations
                     b.Navigation("applicationUser");
 
                     b.Navigation("product");
-                });
-
-            modelBuilder.Entity("MyShoppingCart.Models.ShippingMethod", b =>
-                {
-                    b.HasOne("MyShoppingCart.Models.ApplicationUser", "applicationUser")
-                        .WithMany()
-                        .HasForeignKey("applicationUserId");
-
-                    b.HasOne("MyShoppingCart.Models.Container", "container")
-                        .WithMany()
-                        .HasForeignKey("containerId");
-
-                    b.Navigation("applicationUser");
-
-                    b.Navigation("container");
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShippingPolicy", b =>

@@ -38,8 +38,10 @@ namespace MyShoppingCart.Helpers
                 // Create the blob client.            
                 BlobContainerClient blobClient = new BlobContainerClient(ConnectionString, ContainerName);
 
+                string sNewFileName = iFormFile.FileName.Trim().Replace(' ', '_');
+
                 // Upload the file
-                BlobClient blob = blobClient.GetBlobClient($"{userId}/{iFormFile.FileName}");
+                BlobClient blob = blobClient.GetBlobClient($"{userId}/{sNewFileName}");
 
                 // Upload local file
                 await blob.UploadAsync(sFilePath, true); 

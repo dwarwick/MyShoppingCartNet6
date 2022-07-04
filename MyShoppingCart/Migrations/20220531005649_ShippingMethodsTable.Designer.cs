@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyShoppingCart.Data;
 
@@ -11,9 +12,10 @@ using MyShoppingCart.Data;
 namespace MyShoppingCart.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220531005649_ShippingMethodsTable")]
+    partial class ShippingMethodsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -413,14 +415,14 @@ namespace MyShoppingCart.Migrations
                     b.Property<string>("applicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("height")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("height")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("length")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("length")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("width")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("width")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

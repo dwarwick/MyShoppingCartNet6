@@ -14,14 +14,14 @@ namespace MyShoppingCart.Data.Cart
 {
     public class ShoppingCart : Controller
     {
-        public AppDbContext _context { get; set; }        
-
+        public AppDbContext _context { get; set; }
+        
         public string ShoppingCartId { get; set; }
         public List<ShoppingCartItem> ShoppingCartItems { get; set; }
 
         public ShoppingCart(AppDbContext context)
         {
-            _context = context;
+            _context = context;            
         }
 
         public static ShoppingCart GetShoppingCart(IServiceProvider services, string cartId = "")
@@ -71,7 +71,7 @@ namespace MyShoppingCart.Data.Cart
                 {
                     ShoppingCartId = shoppingCartId,
                     Product = product,
-                    Amount = 1,
+                    Amount = 1,                    
                     applicationUser = applicationUser
                 };
 
@@ -113,6 +113,10 @@ namespace MyShoppingCart.Data.Cart
 
         public decimal GetShoppingCartTotal() => _context.ShoppingCartItems.Where(n => n.ShoppingCartId == ShoppingCartId).Select(n => n.Product.Price * n.Amount).Sum();
 
+        public List<ShippingMethod> GetContainers(List<ShoppingCartItem> shoppingCartItems) 
+        {             
+            return _context.ShippingMethods.Where(x => x.applicationUser == shoppingCartItems[0].applicationUser).Include(x => x.container).ToList();            
+        }
         public async Task ClearShoppingCartAsync(IServiceProvider serviceProvider)
         {
             var items = await _context.ShoppingCartItems.Where(n => n.ShoppingCartId == ShoppingCartId).ToListAsync();

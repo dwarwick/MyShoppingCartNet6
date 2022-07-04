@@ -14,7 +14,7 @@ namespace MyShoppingCart.Data
     {
         public static void Seed(IApplicationBuilder builder)
         {
-            using(var serviceScope = builder.ApplicationServices.CreateScope())
+            using (var serviceScope = builder.ApplicationServices.CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
                 context.Database.EnsureCreated();
@@ -42,6 +42,69 @@ namespace MyShoppingCart.Data
                             Name = "Product 3"
                         }
                     });
+
+                    context.SaveChanges();
+
+                    
+                    
+                }
+
+                if (!context.ShippingClasses.Any())
+                {
+                    context.ShippingClasses.AddRange(new List<ShippingClass>
+                        {
+                            new ShippingClass
+                            {
+                                //Id = 3,
+                                Name = "USPS First-Class Mail",
+                                MaxWeightOz = 15.99M,
+                                MaxLengthInch = 22,
+                                MaxWidthInch = 18,
+                                MaxHeightInch = 15,
+                                MinLengthInch = 5,
+                                MinWidthInch = 3.5M,
+                                MinHeightInch = .007M,
+                                MinMachinableLengthInch = 6,
+                                MinMachinableWidthInch = 3,
+                                MinMachinableHeightInch = .25M,
+                                DeliveryTimeline = "1 to 5 business days (Not Guaranteed)"
+                            },
+                            new ShippingClass
+                            {
+                                //Id = 4,
+                                Name = "USPS Media Mail",
+                                MaxWeightOz = 1120, // 70 lbs.
+                                MaxCombinedLengthAndGirth = 108,
+                                DeliveryTimeline = "2 to 8 business days (Not Guaranteed)"
+                            },
+                            new ShippingClass
+                            {
+                                //Id = 3,
+                                Name = "USPS Parcel Select Ground",
+                                MaxWeightOz = 1120, // 70 lbs.
+                                MaxCombinedLengthAndGirth = 130,
+                                DeliveryTimeline = "2 to 8 business days (Not Guaranteed)"
+                            },
+                            new ShippingClass
+                            {
+                                //Id = 4,
+                                Name = "USPS Priority Mail",
+                                MaxWeightOz = 1120, // 70 lbs.
+                                MaxCombinedLengthAndGirth = 108,
+                                MaxLengthInch = 27,
+                                MaxWidthInch = 17,
+                                MaxHeightInch = 17,
+                                DeliveryTimeline = "1 to 3 business days (Not Guaranteed)"
+                            },
+                            new ShippingClass
+                            {
+                                //Id = 4,
+                                Name = "USPS Priority Mail Express",
+                                MaxWeightOz = 1120, // 70 lbs.
+                                MaxCombinedLengthAndGirth = 108,
+                                DeliveryTimeline = "1 to 3 business days (Guaranteed). See https://www.usps.com/ship/priority-mail-express.htm for details."
+                            }
+                        });
                     context.SaveChanges();
                 }
                 //ProductImage
