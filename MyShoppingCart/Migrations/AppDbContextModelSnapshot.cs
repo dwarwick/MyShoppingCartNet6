@@ -286,7 +286,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("shippingClassId");
 
-                    b.ToTable("containers");
+                    b.ToTable("containers", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.Order", b =>
@@ -308,7 +308,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.OrderItem", b =>
@@ -342,7 +342,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("payoutId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.Payout", b =>
@@ -379,7 +379,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("applicationUserId");
 
-                    b.ToTable("Payouts");
+                    b.ToTable("Payouts", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.Product", b =>
@@ -426,7 +426,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("applicationUserId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ProductCategory", b =>
@@ -449,7 +449,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ProductCategoryLookup", b =>
@@ -468,7 +468,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategoryLookups");
+                    b.ToTable("ProductCategoryLookups", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ProductImage", b =>
@@ -496,7 +496,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ProductRating", b =>
@@ -529,7 +529,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("productId");
 
-                    b.ToTable("ProductRatings");
+                    b.ToTable("ProductRatings", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShippingClass", b =>
@@ -581,7 +581,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingClasses");
+                    b.ToTable("ShippingClasses", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShippingMethod", b =>
@@ -604,7 +604,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("containerId");
 
-                    b.ToTable("ShippingMethods");
+                    b.ToTable("ShippingMethods", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShippingPolicy", b =>
@@ -630,7 +630,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("ShippingClassId");
 
-                    b.ToTable("ShippingPolicies");
+                    b.ToTable("ShippingPolicies", (string)null);
                 });
 
             modelBuilder.Entity("MyShoppingCart.Models.ShoppingCartItem", b =>
@@ -659,7 +659,7 @@ namespace MyShoppingCart.Migrations
 
                     b.HasIndex("applicationUserId");
 
-                    b.ToTable("ShoppingCartItems");
+                    b.ToTable("ShoppingCartItems", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
