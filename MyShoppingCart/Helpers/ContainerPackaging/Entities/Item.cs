@@ -23,8 +23,9 @@ namespace MyshoppingCart.Helpers.ContainerPackaging.Entities
 		/// <param name="dim1">The length of one of the three item dimensions.</param>
 		/// <param name="dim2">The length of another of the three item dimensions.</param>
 		/// <param name="dim3">The length of the other of the three item dimensions.</param>
+		/// <param name="weight">The weight of the item.</param>
 		/// <param name="itemQuantity">The item quantity.</param>
-		public Item(int id, decimal dim1, decimal dim2, decimal dim3, int quantity)
+		public Item(int id, decimal dim1, decimal dim2, decimal dim3, decimal weight, int quantity)
 		{
 			this.ID = id;
 			this.Dim1 = dim1;
@@ -32,6 +33,7 @@ namespace MyshoppingCart.Helpers.ContainerPackaging.Entities
 			this.Dim3 = dim3;
 			this.volume = dim1 * dim2 * dim3;
 			this.Quantity = quantity;
+			this.Weight = weight;
 		}
 
 		#endregion Constructors
@@ -119,12 +121,17 @@ namespace MyshoppingCart.Helpers.ContainerPackaging.Entities
 		public int Quantity { get; set; }
 
 		/// <summary>
-		/// Gets or sets the x dimension of the orientation of the item as it has been packed.
+		/// The weight of the shopping cart item
 		/// </summary>
-		/// <value>
-		/// The x dimension of the orientation of the item as it has been packed.
-		/// </value>
-		[DataMember]
+        public decimal Weight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the x dimension of the orientation of the item as it has been packed.
+        /// </summary>
+        /// <value>
+        /// The x dimension of the orientation of the item as it has been packed.
+        /// </value>
+        [DataMember]
 		public decimal PackDimX { get; set; }
 
 		/// <summary>

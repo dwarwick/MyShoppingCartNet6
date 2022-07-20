@@ -93,7 +93,7 @@ namespace MyShoppingCart.Helpers.Paypal
                             .Add(new PaypalSdk.Item
                             {
                                 Name = product.Product.Name,
-                                Description = product.Product.Description.Trim().Length > 127 ?  product.Product.Description[..126] : product.Product.Description.Trim(),
+                                Description = product.Product.Description.Trim().Length > 127 ? product.Product.Description[..126] : product.Product.Description.Trim(),
                                 UnitAmount = new PaypalSdk.Money
                                 {
                                     CurrencyCode = CurrencyCode.USD,
@@ -138,47 +138,63 @@ namespace MyShoppingCart.Helpers.Paypal
             //postages = serializer.Deserialize(reader) as PostageCollection;
             //reader.Close();
 
-            List<int> algorithms = new List<int>();
-            List<ContainerEntities.Item> itemsToPack = new List<ContainerEntities.Item>();
-            List<ContainerEntities.Container> containers = new List<ContainerEntities.Container>();
-
-            algorithms.Add((int)AlgorithmType.EB_AFIT);
-            
-            foreach (ShippingMethod shippingMethod in basket.ShippingMethods)
-            {
-                ContainerEntities.Container container = new
-                    (
-                        shippingMethod.container.Id, 
-                        shippingMethod.container.Name,
-                        shippingMethod.container.LengthInch, 
-                        shippingMethod.container.WidthInch, 
-                        shippingMethod.container.HeightInch
-                    );
-                containers.Add(container);
-            }
-
-            foreach(ShoppingCartItem shoppingCartItem in basket.ShoppingCart.ShoppingCartItems)
-            {
-                ContainerEntities.Item item = new 
-                    (
-                        shoppingCartItem.Product.Id,
-                        shoppingCartItem.Product.length, 
-                        shoppingCartItem.Product.width, 
-                        shoppingCartItem.Product.height,
-                        shoppingCartItem.Amount
-                    );
-                itemsToPack.Add(item);
-            }
-            
+            List<int> algorithms = GetPackingAlgorithms();
+            List<ContainerEntities.Item> itemsToPack = GetShoppingCartItems(basket);
+            List<ContainerEntities.Container> containers = GetShippingContainers(basket);
 
             List<ContainerEntities.ContainerPackingResult> result = PackingService.Pack(containers, itemsToPack, algorithms);
 
-            List<ContainerEntities.ContainerPackingResult> algorithmPackingResults = result.FindAll(x => x.AlgorithmPackingResults.Exists(y => y.IsCompletePack == true));
+            List<ContainerEntities.ContainerPackingResult> packingResults_NoUnpackedItems_IsCompletePacked = 
+                result.FindAll(x => x.AlgorithmPackingResults.Exists(y => y.IsCompletePack == true && y.UnpackedItems.Count == 0));
 
             //if(result.Exists(x => x.AlgorithmPackingResults.FindAll(x  => x.IsCompletePack == true)))
 
             //if(basket.ShoppingCart.ShoppingCartItems.Count == 0)    
             return "3.00";
+        }
+
+        private static List<int> GetPackingAlgorithms()
+        {
+            return new List<int> { (int)AlgorithmType.EB_AFIT };
+        }
+
+        private static List<ContainerEntities.Container> GetShippingContainers(ShoppingCartVM basket)
+        {
+            List<ContainerEntities.Container> containers = new List<ContainerEntities.Container>();
+
+            foreach (ShippingMethod shippingMethod in basket.ShippingMethods)
+            {
+                ContainerEntities.Container container = new
+                    (
+                        shippingMethod.container.Id,
+                        shippingMethod.container.Name,
+                        shippingMethod.container.LengthInch,
+                        shippingMethod.container.WidthInch,
+                        shippingMethod.container.HeightInch
+                    );
+                containers.Add(container);
+            }
+            return containers;
+        }
+
+        private static List<ContainerEntities.Item> GetShoppingCartItems(ShoppingCartVM basket)
+        {
+            List<ContainerEntities.Item> itemsToPack = new List<ContainerEntities.Item>();
+
+            foreach (ShoppingCartItem shoppingCartItem in basket.ShoppingCart.ShoppingCartItems)
+            {
+                ContainerEntities.Item item = new
+                    (
+                        shoppingCartItem.Product.Id,
+                        shoppingCartItem.Product.length,
+                        shoppingCartItem.Product.width,
+                        shoppingCartItem.Product.height,
+                        shoppingCartItem.Product.weight,
+                        shoppingCartItem.Amount
+                    );
+                itemsToPack.Add(item);
+            }
+            return itemsToPack;
         }
     }
 }

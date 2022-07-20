@@ -42,6 +42,9 @@ namespace MyShoppingCart.Models
 
         [Range(0, int.MaxValue, ErrorMessage = "height must be at least 0 inches")]
         public decimal height { get; set; } = 0;
+        
+        [Range(0, int.MaxValue, ErrorMessage = "weight must be at least 0 ounces")]
+        public decimal weight { get; set; } = 0;
                 
     }
 }
